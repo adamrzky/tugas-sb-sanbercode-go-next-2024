@@ -1,0 +1,40 @@
+-- Tampilkan seluruh data posts bersama nama author, yang ditulis oleh John Doe:
+SELECT blog_posts.*, users.name AS Author_Name
+FROM blog_posts
+JOIN users ON blog_posts.author_id = users.id
+WHERE users.name = 'John Doe';
+
+
+-- Tampilkan category name, post title, author name yang memiliki category basic saja:
+SELECT categories.name as category_name, blog_posts.title, users.name 
+FROM categories 
+JOIN post_categories ON categories.id = post_categories.category_id 
+JOIN blog_posts ON post_categories.post_id = blog_posts.id 
+JOIN users ON blog_posts.author_id = users.id 
+WHERE categories.name = 'Basic';
+
+-- Tampilkan category name, post title, body, dan nama author yang ditulis oleh Robert dan Frank:
+SELECT categories.name AS Category_Name, blog_posts.title AS Post_Title, blog_posts.body AS Post_Body, users.name AS Author_Name
+FROM categories 
+JOIN post_categories ON categories.id = post_categories.category_id 
+JOIN blog_posts ON post_categories.post_id = blog_posts.id 
+JOIN users ON blog_posts.author_id = users.id 
+WHERE users.name IN ('Robert', 'Frank');
+
+
+-- Tampilkan nama penulis dan nama category untuk artikel yang memiliki lebih dari atau sama dengan dua category:
+SELECT users.name, GROUP_CONCAT(categories.name) 
+FROM users 
+JOIN blog_posts ON users.id = blog_posts.author_id 
+JOIN post_categories ON blog_posts.id = post_categories.post_id 
+JOIN categories ON post_categories.category_id = categories.id 
+GROUP BY blog_posts.id 
+HAVING COUNT(blog_posts.id) >= 2;
+
+-- Tampilkan nama penulis dan post title untuk artikel yang memiliki hanya 1 category saja:
+SELECT users.name, blog_posts.title 
+FROM users 
+JOIN blog_posts ON users.id = blog_posts.author_id 
+JOIN post_categories ON blog_posts.id = post_categories.post_id 
+GROUP BY blog_posts.id 
+HAVING COUNT(blog_posts.id) = 1;
