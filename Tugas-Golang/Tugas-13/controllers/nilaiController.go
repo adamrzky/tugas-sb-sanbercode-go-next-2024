@@ -7,6 +7,7 @@ import (
 	"Tugas-13/utils"
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -14,33 +15,30 @@ import (
 )
 
 func GetNilaiByMahasiswaID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	// Mengambil ID mahasiswa dari parameter URL
+
+	log.Println(w, r, ps)
+
 	id := ps.ByName("id")
 	if id == "" {
 		http.Error(w, "ID is required", http.StatusBadRequest)
 		return
 	}
-
-	// Membuat koneksi database
 	db, err := config.ConnectToMySQL()
 	if err != nil {
 		http.Error(w, "Failed to connect to database: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer db.Close() // Pastikan untuk menutup koneksi database
+	defer db.Close()
 
-	// Menggunakan context dengan timeout (opsional, tergantung kebutuhan)
 	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 	defer cancel()
 
-	// Pemanggilan fungsi query yang mengambil data nilai berdasarkan ID mahasiswa
 	results, err := queries.GetNilaiByMahasiswaID(ctx, db, id)
 	if err != nil {
 		http.Error(w, "Failed to retrieve data: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Mengirimkan hasil sebagai respons JSON
 	utils.ResponseJSON(w, results, http.StatusOK)
 }
 
