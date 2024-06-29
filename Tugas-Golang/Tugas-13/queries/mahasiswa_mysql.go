@@ -5,6 +5,7 @@ import (
 	"Tugas-13/models"
 	"context"
 	"database/sql"
+	"errors"
 	"log"
 	"time"
 )
@@ -14,6 +15,10 @@ const layoutDateTime = "2006-01-02 15:04:05"
 
 // GetMahasiswaByID fetches a single mahasiswa by ID from the database
 func GetMahasiswaByID(ctx context.Context, id string) (models.Mahasiswa, error) {
+
+	// Cetak query ke konsol
+	log.Println("Update requested for ID Queries:", id)
+
 	var mahasiswa models.Mahasiswa
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -28,7 +33,7 @@ func GetMahasiswaByID(ctx context.Context, id string) (models.Mahasiswa, error) 
 	var createdAt, updatedAt string
 	if err := row.Scan(&mahasiswa.ID, &mahasiswa.Nama, &createdAt, &updatedAt); err != nil {
 		if err == sql.ErrNoRows {
-			return mahasiswa, nil // No rows error is not actually an error in this context
+			return mahasiswa, nil
 		}
 		log.Println("Error scanning row:", err)
 		return mahasiswa, err
@@ -69,7 +74,7 @@ func GetAllMahasiswa(ctx context.Context) ([]models.Mahasiswa, error) {
 
 	for rows.Next() {
 		var m models.Mahasiswa
-		var createdAt, updatedAt string // tempatkan tanggal sebagai string
+		var createdAt, updatedAt string
 		if err := rows.Scan(&m.ID, &m.Nama, &createdAt, &updatedAt); err != nil {
 			log.Println("Error scanning row:", err)
 			return nil, err
@@ -94,7 +99,7 @@ func GetAllMahasiswa(ctx context.Context) ([]models.Mahasiswa, error) {
 }
 
 func InsertMahasiswa(mahasiswa models.Mahasiswa) error {
-	db, err := config.ConnectToMySQL() // Adjust with your actual function to get DB connection
+	db, err := config.ConnectToMySQL()
 	if err != nil {
 		return err
 	}
@@ -108,19 +113,40 @@ func InsertMahasiswa(mahasiswa models.Mahasiswa) error {
 
 	return nil
 }
-func UpdateMahasiswa(id string, m models.Mahasiswa) (int64, error) {
+func UpdateMahasiswa(ctx context.Context, id string, m models.Mahasiswa) error {
+
+	log.Println("Update requested for ID:", id)
+
 	db, err := config.ConnectToMySQL()
 	if err != nil {
-		return 0, err
+		log.Println("Cannot connect to MySQL:", err)
+		return err
 	}
 	defer db.Close()
 
-	query := "UPDATE mahasiswa SET nama = ?, updated_at = NOW() WHERE id = ?"
-	result, err := db.Exec(query, m.Nama, id)
+	queryText := "UPDATE mahasiswa SET nama = ?, updated_at = NOW() WHERE id = ?"
+
+	// Cetak query ke konsol
+	log.Println("Executing query:", queryText)
+
+	result, err := db.ExecContext(ctx, queryText, m.Nama, id)
 	if err != nil {
-		return 0, err
+		log.Println("Error executing update query:", err)
+		return err
 	}
-	return result.RowsAffected()
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Println("Error getting rows affected:", err)
+		return err
+	}
+
+	if rowsAffected == 0 {
+		log.Println("No rows were updated. Check if the ID exists:", id)
+		return errors.New("No mahasiswa found with provided ID")
+	}
+
+	return nil
 }
 
 func DeleteMahasiswa(id string) (int64, error) {

@@ -13,8 +13,8 @@ import (
 
 // GetAllMahasiswa mengembalikan semua mahasiswa
 func GetAllMataKuliah(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	ctx := r.Context()                               // Mendapatkan context dari http.Request
-	mahasiswas, err := queries.GetAllMataKuliah(ctx) // Menambahkan ctx sebagai argumen
+	ctx := r.Context()
+	mahasiswas, err := queries.GetAllMataKuliah(ctx)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -25,10 +25,10 @@ func GetAllMataKuliah(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 func GetMataKuliahByID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("id")
 
-	ctx, cancel := context.WithCancel(r.Context()) // Gunakan context dari request
+	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
-	mataKuliah, err := queries.GetMataKuliahByID(ctx, id) // Tambahkan ctx sebagai argumen
+	mataKuliah, err := queries.GetMataKuliahByID(ctx, id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,10 +45,10 @@ func CreateMataKuliah(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	ctx, cancel := context.WithCancel(r.Context()) // Gunakan context dari request
+	ctx, cancel := context.WithCancel(r.Context())
 	defer cancel()
 
-	err = queries.InsertMataKuliah(ctx, mataKuliah) // Tambahkan ctx sebagai argumen
+	err = queries.InsertMataKuliah(ctx, mataKuliah)
 	if err != nil {
 		http.Error(w, "Failed to create mata kuliah "+err.Error(), http.StatusInternalServerError)
 		return

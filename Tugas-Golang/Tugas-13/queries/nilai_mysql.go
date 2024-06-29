@@ -8,20 +8,21 @@ import (
 	"time"
 )
 
-// const layout = "2006-01-02 15:04:05"
-
+// const layoutDateTime = "2006-01-02 15:04:05"
+// GetAllNilai fetches all records from the nilai table
 func GetAllNilai(ctx context.Context) ([]models.Nilai, error) {
 	var nilais []models.Nilai
 	db, err := config.ConnectToMySQL()
 	if err != nil {
-		log.Fatal("Cannot connect to MySQL", err)
+		log.Fatalf("Cannot connect to MySQL: %v", err)
+		return nil, err
 	}
 	defer db.Close()
 
-	queryText := "SELECT id, skor, created_at, updated_at FROM nilai ORDER BY created_at DESC"
+	queryText := "SELECT id, skor, indeks, mata_kuliah_id, mahasiswa_id, created_at, updated_at FROM nilai ORDER BY created_at DESC"
 	rows, err := db.QueryContext(ctx, queryText)
 	if err != nil {
-		log.Println("Error executing query GetAllNilai:", err)
+		log.Printf("Error executing query GetAllNilai: %v", err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -29,20 +30,21 @@ func GetAllNilai(ctx context.Context) ([]models.Nilai, error) {
 	for rows.Next() {
 		var n models.Nilai
 		var createdAt, updatedAt string
-		if err := rows.Scan(&n.ID, &n.Skor, &createdAt, &updatedAt); err != nil {
-			log.Println("Error scanning row:", err)
+		if err := rows.Scan(&n.ID, &n.Skor, &n.Indeks, &n.MataKuliahID, &n.MahasiswaID, &createdAt, &updatedAt); err != nil {
+			log.Printf("Error scanning row: %v", err)
 			return nil, err
 		}
 
+		// Parse the datetime fields
 		n.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
 		if err != nil {
-			log.Println("Error parsing created_at:", err)
+			log.Printf("Error parsing created_at: %v", err)
 			return nil, err
 		}
 
 		n.UpdatedAt, err = time.Parse(layoutDateTime, updatedAt)
 		if err != nil {
-			log.Println("Error parsing updated_at:", err)
+			log.Printf("Error parsing updated_at: %v", err)
 			return nil, err
 		}
 

@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -9,20 +11,18 @@ import (
 
 func BasicAuth(handler http.HandlerFunc) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-		// Check basic auth here, and if failed, return error
 		user, pass, ok := r.BasicAuth()
 		if !ok || !checkCredentials(user, pass) {
-			http.Error(w, "Unauthorized.", 401)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		// If authentication is successful, call the handler
-		handler(w, r)
+		ctx := context.WithValue(r.Context(), httprouter.ParamsKey, ps)
+		handler(w, r.WithContext(ctx))
 	}
 }
 
 // Dummy credential check (implement your check here)
 func checkCredentials(username, password string) bool {
-	// Example: return true if username and password are correct
 	return username == "admin" && password == "password"
 }
 
@@ -35,6 +35,11 @@ func ResponseJSON(w http.ResponseWriter, data interface{}, status int) {
 func HttpRouterToHandlerFunc(h httprouter.Handle) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ps := httprouter.ParamsFromContext(r.Context())
+		if ps == nil {
+			log.Println("Params are nil")
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 		h(w, r, ps)
 	}
 }

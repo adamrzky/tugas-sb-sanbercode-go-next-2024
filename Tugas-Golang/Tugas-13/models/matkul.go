@@ -1,4 +1,3 @@
-// models/mata_kuliah.go
 package models
 
 import "time"
