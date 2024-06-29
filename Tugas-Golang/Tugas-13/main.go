@@ -21,10 +21,11 @@ func main() {
 
 	// Routes for Nilai
 	router.GET("/nilai", controllers.GetAllNilai)
-	// router.GET("/nilai/:id", controllers.GetNilaiByID)
 	router.POST("/nilai", utils.BasicAuth(utils.HttpRouterToHandlerFunc(controllers.CreateNilai)))
 	router.PUT("/nilai/:id", utils.BasicAuth(utils.HttpRouterToHandlerFunc(controllers.UpdateNilai)))
 	router.DELETE("/nilai/:id", utils.BasicAuth(utils.HttpRouterToHandlerFunc(controllers.DeleteNilai)))
+	router.GET("/nilai/mahasiswa/:id", controllers.GetNilaiByMahasiswaID)
+	// router.GET("/nilai/:id", controllers.GetNilaiByID)
 
 	// Routes for Mata Kuliah
 	router.GET("/matkul", controllers.GetAllMataKuliah)

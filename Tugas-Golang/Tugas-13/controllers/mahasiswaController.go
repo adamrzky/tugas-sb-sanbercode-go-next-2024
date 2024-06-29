@@ -12,6 +12,25 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// func GetNilaiByMahasiswaID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// 	id := ps.ByName("id")
+// 	if id == "" {
+// 		http.Error(w, "ID is required", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	ctx, cancel := context.WithCancel(context.Background())
+// 	defer cancel()
+
+// 	results, err := queries.GetNilaiMahasiswa(ctx, id)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
+
+// 	utils.ResponseJSON(w, results, http.StatusOK)
+// }
+
 func GetAllMahasiswa(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ctx := r.Context()
 	mahasiswas, err := queries.GetAllMahasiswa(ctx)

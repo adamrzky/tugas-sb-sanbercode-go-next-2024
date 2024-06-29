@@ -4,12 +4,51 @@ import (
 	"Tugas-13/config"
 	"Tugas-13/models"
 	"context"
+	"database/sql"
 	"log"
 	"time"
 )
 
-// const layoutDateTime = "2006-01-02 15:04:05"
-// GetAllNilai fetches all records from the nilai table
+const layoutDateTime = time.RFC3339
+
+func GetNilaiByMahasiswaID(ctx context.Context, db *sql.DB, mahasiswaID string) ([]models.Nilai, error) {
+	var results []models.Nilai
+	query := `SELECT n.id, n.indeks, n.skor, n.created_at, n.updated_at, m.id AS mahasiswa_id, m.nama AS mahasiswa_nama, 
+                     mk.id AS mata_kuliah_id, mk.nama AS mata_kuliah_nama
+              FROM nilai n
+              JOIN mahasiswa m ON m.id = n.mahasiswa_id
+              JOIN mata_kuliah mk ON mk.id = n.mata_kuliah_id
+              WHERE m.id = ?`
+	rows, err := db.QueryContext(ctx, query, mahasiswaID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var n models.Nilai
+		var createdAt, updatedAt string
+		if err := rows.Scan(&n.ID, &n.Indeks, &n.Skor, &createdAt, &updatedAt, &n.MahasiswaID, &n.MahasiswaNama, &n.MataKuliahID, &n.MataKuliahNama); err != nil {
+			return nil, err
+		}
+
+		n.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
+		if err != nil {
+			log.Println("Error parsing created_at:", err)
+			return nil, err
+		}
+
+		n.UpdatedAt, err = time.Parse(layoutDateTime, updatedAt)
+		if err != nil {
+			log.Println("Error parsing updated_at:", err)
+			return nil, err
+		}
+
+		results = append(results, n)
+	}
+	return results, nil
+}
+
 func GetAllNilai(ctx context.Context) ([]models.Nilai, error) {
 	var nilais []models.Nilai
 	db, err := config.ConnectToMySQL()
@@ -35,7 +74,6 @@ func GetAllNilai(ctx context.Context) ([]models.Nilai, error) {
 			return nil, err
 		}
 
-		// Parse the datetime fields
 		n.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
 		if err != nil {
 			log.Printf("Error parsing created_at: %v", err)
@@ -53,7 +91,6 @@ func GetAllNilai(ctx context.Context) ([]models.Nilai, error) {
 	return nilais, nil
 }
 
-// GetNilaiByID fetches a single nilai record by ID
 func GetNilaiByID(ctx context.Context, id string) (models.Nilai, error) {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -70,7 +107,6 @@ func GetNilaiByID(ctx context.Context, id string) (models.Nilai, error) {
 	return n, nil
 }
 
-// InsertNilai adds a new nilai to the database
 func InsertNilai(ctx context.Context, n models.Nilai) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -78,12 +114,11 @@ func InsertNilai(ctx context.Context, n models.Nilai) error {
 	}
 	defer db.Close()
 
-	query := "INSERT INTO nilai (indeks, skor, created_at, updated_at) VALUES (?, ?, NOW(), NOW())"
-	_, err = db.ExecContext(ctx, query, n.Indeks, n.Skor)
+	query := "INSERT INTO nilai (indeks, skor, mata_kuliah_id, mahasiswa_id, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())"
+	_, err = db.ExecContext(ctx, query, n.Indeks, n.Skor, n.MataKuliahID, n.MahasiswaID)
 	return err
 }
 
-// UpdateNilai updates an existing nilai record
 func UpdateNilai(ctx context.Context, id string, n models.Nilai) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -96,7 +131,6 @@ func UpdateNilai(ctx context.Context, id string, n models.Nilai) error {
 	return err
 }
 
-// DeleteNilai removes a nilai record from the database
 func DeleteNilai(ctx context.Context, id string) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {

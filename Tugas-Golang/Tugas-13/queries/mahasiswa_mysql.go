@@ -10,14 +10,9 @@ import (
 	"time"
 )
 
-// Format standar datetime MySQL
-const layoutDateTime = "2006-01-02 15:04:05"
-
 // GetMahasiswaByID fetches a single mahasiswa by ID from the database
 func GetMahasiswaByID(ctx context.Context, id string) (models.Mahasiswa, error) {
-
-	// Cetak query ke konsol
-	log.Println("Update requested for ID Queries:", id)
+	log.Println("Fetching Mahasiswa by ID:", id)
 
 	var mahasiswa models.Mahasiswa
 	db, err := config.ConnectToMySQL()
@@ -39,14 +34,13 @@ func GetMahasiswaByID(ctx context.Context, id string) (models.Mahasiswa, error) 
 		return mahasiswa, err
 	}
 
-	// Parse the datetime fields
-	mahasiswa.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
+	mahasiswa.CreatedAt, err = time.Parse(time.RFC3339, createdAt)
 	if err != nil {
 		log.Println("Error parsing created_at:", err)
 		return mahasiswa, err
 	}
 
-	mahasiswa.UpdatedAt, err = time.Parse(layoutDateTime, updatedAt)
+	mahasiswa.UpdatedAt, err = time.Parse(time.RFC3339, updatedAt)
 	if err != nil {
 		log.Println("Error parsing updated_at:", err)
 		return mahasiswa, err
@@ -80,14 +74,13 @@ func GetAllMahasiswa(ctx context.Context) ([]models.Mahasiswa, error) {
 			return nil, err
 		}
 
-		// Konversi string ke time.Time
-		m.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
+		m.CreatedAt, err = time.Parse(time.RFC3339, createdAt)
 		if err != nil {
 			log.Println("Error parsing created_at:", err)
 			return nil, err
 		}
 
-		m.UpdatedAt, err = time.Parse(layoutDateTime, updatedAt)
+		m.UpdatedAt, err = time.Parse(time.RFC3339, updatedAt)
 		if err != nil {
 			log.Println("Error parsing updated_at:", err)
 			return nil, err
@@ -113,8 +106,8 @@ func InsertMahasiswa(mahasiswa models.Mahasiswa) error {
 
 	return nil
 }
-func UpdateMahasiswa(ctx context.Context, id string, m models.Mahasiswa) error {
 
+func UpdateMahasiswa(ctx context.Context, id string, m models.Mahasiswa) error {
 	log.Println("Update requested for ID:", id)
 
 	db, err := config.ConnectToMySQL()
@@ -125,9 +118,6 @@ func UpdateMahasiswa(ctx context.Context, id string, m models.Mahasiswa) error {
 	defer db.Close()
 
 	queryText := "UPDATE mahasiswa SET nama = ?, updated_at = NOW() WHERE id = ?"
-
-	// Cetak query ke konsol
-	log.Println("Executing query:", queryText)
 
 	result, err := db.ExecContext(ctx, queryText, m.Nama, id)
 	if err != nil {

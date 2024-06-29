@@ -1,15 +1,48 @@
 package controllers
 
 import (
+	"Tugas-13/config"
 	"Tugas-13/models"
 	"Tugas-13/queries"
 	"Tugas-13/utils"
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/julienschmidt/httprouter"
 )
+
+func GetNilaiByMahasiswaID(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	// Mengambil ID mahasiswa dari parameter URL
+	id := ps.ByName("id")
+	if id == "" {
+		http.Error(w, "ID is required", http.StatusBadRequest)
+		return
+	}
+
+	// Membuat koneksi database
+	db, err := config.ConnectToMySQL()
+	if err != nil {
+		http.Error(w, "Failed to connect to database: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close() // Pastikan untuk menutup koneksi database
+
+	// Menggunakan context dengan timeout (opsional, tergantung kebutuhan)
+	ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+	defer cancel()
+
+	// Pemanggilan fungsi query yang mengambil data nilai berdasarkan ID mahasiswa
+	results, err := queries.GetNilaiByMahasiswaID(ctx, db, id)
+	if err != nil {
+		http.Error(w, "Failed to retrieve data: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Mengirimkan hasil sebagai respons JSON
+	utils.ResponseJSON(w, results, http.StatusOK)
+}
 
 // GetAllNilai mengembalikan semua nilai
 func GetAllNilai(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -24,12 +57,11 @@ func GetAllNilai(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	utils.ResponseJSON(w, nilai, http.StatusOK)
 }
 
-// CreateNilai handles the creation of a new nilai
 func CreateNilai(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	var nilai models.Nilai
 	err := json.NewDecoder(r.Body).Decode(&nilai)
 	if err != nil {
-		http.Error(w, "Invalid input "+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Invalid input: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -38,9 +70,10 @@ func CreateNilai(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	err = queries.InsertNilai(ctx, nilai)
 	if err != nil {
-		http.Error(w, "Failed to create nilai "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Failed to create nilai: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
 	utils.ResponseJSON(w, nilai, http.StatusCreated)
 }
 

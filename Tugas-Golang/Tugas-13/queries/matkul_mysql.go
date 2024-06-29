@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// const layout = "2006-01-02 15:04:05"
+const layout = "2006-01-02T15:04:05"
 
 func GetAllMataKuliah(ctx context.Context) ([]models.MataKuliah, error) {
 	var mataKuliahs []models.MataKuliah
@@ -51,7 +51,6 @@ func GetAllMataKuliah(ctx context.Context) ([]models.MataKuliah, error) {
 	return mataKuliahs, nil
 }
 
-// GetMataKuliahByID fetches a single mata kuliah record by ID
 func GetMataKuliahByID(ctx context.Context, id string) (models.MataKuliah, error) {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -62,13 +61,26 @@ func GetMataKuliahByID(ctx context.Context, id string) (models.MataKuliah, error
 
 	var mk models.MataKuliah
 	query := "SELECT id, nama, created_at, updated_at FROM mata_kuliah WHERE id = ?"
-	if err := db.QueryRowContext(ctx, query, id).Scan(&mk.ID, &mk.Nama, &mk.CreatedAt, &mk.UpdatedAt); err != nil {
+	var createdAt, updatedAt string
+	if err := db.QueryRowContext(ctx, query, id).Scan(&mk.ID, &mk.Nama, &createdAt, &updatedAt); err != nil {
 		return models.MataKuliah{}, err
 	}
+
+	mk.CreatedAt, err = time.Parse(layoutDateTime, createdAt)
+	if err != nil {
+		log.Println("Error parsing created_at:", err)
+		return models.MataKuliah{}, err
+	}
+
+	mk.UpdatedAt, err = time.Parse(layoutDateTime, updatedAt)
+	if err != nil {
+		log.Println("Error parsing updated_at:", err)
+		return models.MataKuliah{}, err
+	}
+
 	return mk, nil
 }
 
-// InsertMataKuliah adds a new mata kuliah to the database
 func InsertMataKuliah(ctx context.Context, mk models.MataKuliah) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -81,7 +93,6 @@ func InsertMataKuliah(ctx context.Context, mk models.MataKuliah) error {
 	return err
 }
 
-// UpdateMataKuliah updates an existing mata kuliah record
 func UpdateMataKuliah(ctx context.Context, id string, mk models.MataKuliah) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
@@ -94,7 +105,6 @@ func UpdateMataKuliah(ctx context.Context, id string, mk models.MataKuliah) erro
 	return err
 }
 
-// DeleteMataKuliah removes a mata kuliah record from the database
 func DeleteMataKuliah(ctx context.Context, id string) error {
 	db, err := config.ConnectToMySQL()
 	if err != nil {
