@@ -15,7 +15,7 @@ func RegisterRoutes(router *httprouter.Router) {
 	router.GET("/bangun-ruang/balok", controllers.HandleBalok)
 	router.GET("/bangun-ruang/tabung", controllers.HandleTabung)
 
-	router.GET("/categories", controllers.GetAllCategories) // No Auth required
+	router.GET("/categories", controllers.GetAllCategories)
 	router.POST("/categories", middleware.BasicAuth(controllers.CreateCategory))
 	router.PUT("/categories/:id", middleware.BasicAuth(controllers.UpdateCategory))
 	router.DELETE("/categories/:id", middleware.BasicAuth(controllers.DeleteCategory))
@@ -24,4 +24,6 @@ func RegisterRoutes(router *httprouter.Router) {
 	router.POST("/articles", middleware.BasicAuth(controllers.CreateArticle))
 	router.PUT("/articles/:id", middleware.BasicAuth(controllers.UpdateArticle))
 	router.DELETE("/articles/:id", middleware.BasicAuth(controllers.DeleteArticle))
+
+	router.GET("/categories/:id/articles", controllers.GetArticlesByCategory)
 }

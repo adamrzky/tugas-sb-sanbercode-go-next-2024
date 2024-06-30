@@ -5,6 +5,7 @@ import (
 	"Quiz-1/models"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 	"strings"
@@ -12,32 +13,88 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func GetAllArticles(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func fetchFilteredArticles(w http.ResponseWriter, r *http.Request, categoryId string) {
 	db, err := config.GetDB()
 	if err != nil {
-		http.Error(w, "Failed to connect to database", http.StatusInternalServerError)
+		http.Error(w, "Kesalahan koneksi database: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT * FROM articles")
+	var whereClauses []string
+	var queryParams []interface{}
+
+	if categoryId != "" {
+		whereClauses = append(whereClauses, "category_id = ?")
+		queryParams = append(queryParams, categoryId)
+	}
+
+	if title := r.URL.Query().Get("title"); title != "" {
+		whereClauses = append(whereClauses, "LOWER(title) LIKE LOWER(?)")
+		queryParams = append(queryParams, "%"+title+"%")
+	}
+
+	if minYear := r.URL.Query().Get("minYear"); minYear != "" {
+		whereClauses = append(whereClauses, "YEAR(created_at) >= ?")
+		queryParams = append(queryParams, minYear)
+	}
+
+	if maxYear := r.URL.Query().Get("maxYear"); maxYear != "" {
+		whereClauses = append(whereClauses, "YEAR(created_at) <= ?")
+		queryParams = append(queryParams, maxYear)
+	}
+
+	if minWord := r.URL.Query().Get("minWord"); minWord != "" {
+		whereClauses = append(whereClauses, "CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(content, ' ', '')) + 1 >= ?")
+		queryParams = append(queryParams, minWord)
+	}
+
+	if maxWord := r.URL.Query().Get("maxWord"); maxWord != "" {
+		whereClauses = append(whereClauses, "CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(content, ' ', '')) + 1 <= ?")
+		queryParams = append(queryParams, maxWord)
+	}
+
+	sortOrder := "ASC"
+	if sortByTitle := r.URL.Query().Get("sortByTitle"); sortByTitle == "desc" {
+		sortOrder = "DESC"
+	}
+
+	query := "SELECT id, title, content, image_url, article_length, created_at, updated_at FROM articles"
+	if len(whereClauses) > 0 {
+		query += " WHERE " + strings.Join(whereClauses, " AND ")
+	}
+	query += fmt.Sprintf(" ORDER BY title %s", sortOrder)
+
+	rows, err := db.Query(query, queryParams...)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Kesalahan eksekusi query: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Log the query and parameters for debugging
+	log.Printf("Executing SQL Query: %s", query)
+	log.Printf("With parameters: %+v", queryParams)
 	defer rows.Close()
 
 	var articles []models.Article
 	for rows.Next() {
 		var article models.Article
-		if err := rows.Scan(&article.ID, &article.Title, &article.Content, &article.ImageURL, &article.ArticleLength, &article.CreatedAt, &article.UpdatedAt, &article.CategoryID); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		if err := rows.Scan(&article.ID, &article.Title, &article.Content, &article.ImageURL, &article.ArticleLength, &article.CreatedAt, &article.UpdatedAt); err != nil {
+			http.Error(w, "Kesalahan membaca artikel: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		articles = append(articles, article)
 	}
 
 	json.NewEncoder(w).Encode(articles)
+}
+func GetArticlesByCategory(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	categoryId := ps.ByName("id")
+	fetchFilteredArticles(w, r, categoryId)
+}
+
+func GetAllArticles(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	fetchFilteredArticles(w, r, "")
 }
 
 func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
