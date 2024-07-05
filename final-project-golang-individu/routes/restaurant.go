@@ -15,9 +15,9 @@ func RestaurantRoutes(r *gin.Engine) {
 	}
 
 	restaurant := r.Group("/restaurants")
+	restaurant.GET("/", controllers.GetRestaurants)
 	restaurant.Use(authMiddleware.MiddlewareFunc()) // Apply JWT middleware to all routes in this group
 	{
 		restaurant.POST("/", controllers.CreateRestaurant)
-		restaurant.GET("/", controllers.GetRestaurants)
 	}
 }

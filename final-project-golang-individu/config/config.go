@@ -1,8 +1,8 @@
 package config
 
 import (
-	"final-project-golang-individu/models"
 	"log"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -11,16 +11,18 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-	dsn := "root:@tcp(127.0.0.1:3306)/culinary?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
+
+	// Get database configuration from environment variables
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
+
+	dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
-	}
-
-	// Migrate the schema
-	err = DB.AutoMigrate(&models.User{}, &models.Profile{}, &models.Restaurant{}, &models.Food{}, &models.Review{}, &models.Comment{})
-	if err != nil {
-		log.Fatalf("Failed to migrate database schema: %v", err)
 	}
 }

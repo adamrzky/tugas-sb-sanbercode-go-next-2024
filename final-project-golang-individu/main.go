@@ -6,8 +6,10 @@ import (
 	"final-project-golang-individu/middleware"
 	"final-project-golang-individu/routes"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -22,7 +24,22 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @host localhost:8080
 // @BasePath /
+// @SecurityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	// Get the port from the environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified
+	}
+
 	config.InitDB()
 
 	r := gin.Default()
@@ -33,7 +50,7 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	err := r.Run()
+	err = r.Run(":" + port)
 	if err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 	}
