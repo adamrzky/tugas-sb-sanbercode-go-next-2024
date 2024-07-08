@@ -1,0 +1,260 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Poppins";
+    box-sizing: border-box;
+}
+
+/* Styling untuk header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background-color: #fff;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.header img {
+    max-height: 60px;
+}
+
+.header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+.header nav ul li {
+    margin-left: 20px;
+}
+
+.header nav ul li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Styling untuk hero section */
+.container_hero {
+    display: flex;
+    justify-content: center; /* Mengubah justify-content dari space-between menjadi center */
+    align-items: center;
+    padding: 50px;
+    height: 80vh;
+}
+
+/* Pastikan elemen dalam .container_hero lebih terpusat */
+.container_hero-headline, .container_hero-image {
+    max-width: 50%; /* Atur lebar maksimum untuk membuat kedua elemen seimbang */
+    text-align: center; /* Memastikan teks dalam headline terpusat */
+}
+
+.container_hero-image img {
+    width: 100%;
+    max-width: 500px;
+}
+
+.container_hero-headline h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.container_hero-headline small {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.container_hero-headline ul {
+    display: flex;
+    list-style: none;
+    justify-content: center; /* Memastikan ikon media sosial terpusat */
+    padding: 0;
+}
+
+.container_hero-headline ul li {
+    margin: 0 10px; /* Menambahkan margin di kiri dan kanan */
+}
+
+.container_hero-headline ul li a {
+    font-size: 1.5em;
+    color: #333;
+    text-decoration: none;
+}
+
+/* Styling untuk section deskripsi */
+.container_describe {
+    display: flex;
+    justify-content: center; /* Mengubah justify-content dari space-between menjadi center */
+    align-items: center;
+    padding: 50px;
+    background-color: #f9f9f9;
+    gap: 20px; /* Tambahkan gap untuk ruang antara elemen */
+}
+
+.container_describe-animation, .container_describe-info {
+    flex: 1;
+    text-align: center; /* Memastikan teks dalam deskripsi terpusat */
+}
+
+.container_describe-animation {
+    display: flex;
+    justify-content: center; /* Menambahkan pusat pada ikon */
+    align-items: center;
+}
+
+.container_describe-animation i {
+    font-size: 6em;
+    color: #fff;
+    background-color: #333;
+    border-radius: 50%;
+    padding: 50px;
+}
+
+.container_describe-info__card {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* Styling untuk halaman riwayat-pribadi */
+.container-history {
+    padding: 50px;
+    max-width: 800px; /* Atur lebar maksimum untuk kontainer */
+    margin: 0 auto; /* Membuat kontainer berada di tengah */
+    text-align: center; /* Memusatkan teks */
+}
+
+.container-history__motto p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.container-history__table h1 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.container-history__table table {
+    margin: 0 auto; /* Membuat tabel berada di tengah */
+    border-collapse: collapse; /* Menghapus jarak antar border */
+}
+
+.container-history__table table td, 
+.container-history__table table th {
+    border: 1px solid #ddd; /* Menambahkan border pada tabel */
+    padding: 8px; /* Menambahkan padding pada sel tabel */
+}
+
+/* Styling untuk halaman portofolio */
+.container-wrapping {
+    padding: 50px;
+    max-width: 1200px; /* Membatasi lebar maksimum untuk konten */
+    margin: 0 auto; /* Menjaga konten tetap di tengah */
+}
+
+.container-wrapping__card {
+    display: grid;
+    gap: 20px;
+    justify-content: center; /* Menjaga konten tetap di tengah */
+}
+
+.container-wrapping__card img {
+    width: 100%;
+    height: auto;
+    max-width: 200px; /* Membatasi lebar maksimum untuk gambar */
+    border-radius: 8px;
+    transition: transform 0.3s ease; /* Transition for zoom effect */
+}
+
+.container-wrapping__card img:hover {
+    transform: scale(1.1); /* Zoom effect on hover */
+}
+
+/* Responsive styling untuk grid layout */
+@media (min-width: 1024px) {
+    .container-wrapping__card {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Mengubah ukuran kolom grid */
+    }
+}
+
+@media (max-width: 1024px) {
+    .container-wrapping__card {
+        grid-template-columns: repeat(3, 1fr); /* Menyesuaikan jumlah kolom pada layar lebih kecil */
+    }
+}
+
+@media (max-width: 768px) {
+    .container-wrapping__card {
+        grid-template-columns: repeat(2, 1fr); /* Menyesuaikan jumlah kolom pada layar lebih kecil */
+    }
+}
+
+@media (max-width: 480px) {
+    .container-wrapping__card {
+        grid-template-columns: 1fr; /* Menyesuaikan jumlah kolom pada layar lebih kecil */
+    }
+}
+
+/* Styling untuk footer */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .container_hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .container_hero-headline {
+        margin-bottom: 20px;
+    }
+
+    .container_describe {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .container_describe-animation {
+        margin-bottom: 20px;
+    }
+}
+/* Animasi untuk teks mengetik */
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: orange;
+    }
+}
+
+.container_hero-headline h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border-right: .15em solid orange; /* The typwriter cursor */
+    white-space: nowrap;
+    margin: 0 auto; /* Center the text */
+    letter-spacing: .15em;
+    animation: 
+        typing 4s steps(40, end),
+        blink-caret .75s step-end infinite;
+    max-width: 100%;
+    white-space: pre-wrap; /* Allow line breaks */
+}
