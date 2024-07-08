@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Akun Baru</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input[type="text"], textarea, select {
+            width: 300px;
+            margin-bottom: 10px;
+        }
+        textarea {
+            height: 100px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Register Akun Baru!</h1>
+    <p>Isilah form dibawah ini</p>
+    <form action="process.html" method="POST">
+        <label for="first-name">First Name :</label><br>
+        <input type="text" id="first-name" name="first-name" required><br>
+
+        <label for="last-name">Last Name :</label><br>
+        <input type="text" id="last-name" name="last-name" required><br>
+
+        <label>Gender :</label><br>
+        <input type="radio" id="male" name="gender" value="Male" required> Male
+        <input type="radio" id="female" name="gender" value="Female" required> Female
+        <input type="radio" id="other" name="gender" value="Other" required> Other<br>
+
+        <label for="nationality">Nationality :</label><br>
+        <select id="nationality" name="nationality" required>
+            <option value="Indonesian">Indonesian</option>
+            <option value="Other">Other</option>
+        </select><br>
+
+        <label for="focus">Sedang Fokus Belajar :</label><br>
+        <select id="focus" name="focus" required>
+            <option value="Reactjs">Reactjs</option>
+            <option value="Other">Other</option><!DOCTYPE html>
+            <html lang="id">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Beasiswa Superbootcamp 2024</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        padding: 20px;
+                        background-image: url('public/img/pattern.jpg'); /* Pastikan path ini sesuai dengan direktori Anda */
+                    }
+                    header, footer, section {
+                        margin-bottom: 20px;
+                    }
+                    header {
+                        text-align: center;
+                        padding-bottom: 20px;
+                    }
+                    header img {
+                        display: block;
+                        margin: auto;
+                        width: 120px; /* Sesuaikan ukuran logo sesuai dengan kebutuhan */
+                    }
+                    header h1 {
+                        margin-top: 10px;
+                    }
+                    ul {
+                        list-style-type: none;
+                        padding: 0;
+                    }
+                    li {
+                        margin-bottom: 5px;
+                    }
+                    footer {
+                        border-top: 1px solid #000;
+                        padding-top: 10px;
+                        text-align: center;
+                    }
+                    nav {
+                        background-color: #f8f8f8;
+                        padding: 10px;
+                        text-align: center;
+                    }
+                    nav a {
+                        margin: 0 15px;
+                        text-decoration: none;
+                        color: black;
+                    }
+                </style>
+            </head>
+            <body>
+            
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="form.html">Register</a>
+                <a href="article.html">Article</a>
+            </nav>
+            
+            <header>
+                <img src="public/img/logo.png" alt="Sanbercode Logo">
+                <h1>Beasiswa Superbootcamp 2024 | Golang Nextjs</h1>
+            </header>
+            
+            <section>
+                <h2>Data Peserta Beasiswa Superbootcamp 2024</h2>
+                <ul>
+                    <li>Nama: [nama peserta]</li>
+                    <li>Email: [email peserta]</li>
+                    <li>Sistem Operasi: [sistem operasi peserta]</li>
+                    <li>Akun gitlab: [akun gitlab peserta]</li>
+                    <li>Akun telegram: [akun telegram peserta]</li>
+                </ul>
+            </section>
+            
+            <section>
+                <h2>Cara Belajar Di Beasiswa Superbootcamp 2024</h2>
+                <ol>
+                    <li>Mengunjungi Website ini</li>
+                    <li>Mendaftar di, form registrasi</li>
+                    <li>Selesai!</li>
+                </ol>
+            </section>
+            
+            <footer>
+                <p>© 2023 Sanber Campus. All rights reserved.</p>
+            </footer>
+            
+            </body>
+            </html>
+            
+        </select><br>
+
+        <label for="language">Language Spoken:</label><br>
+        <input type="radio" id="language-male" name="language" value="Male" required> Male
+        <input type="radio" id="language-female" name="language" value="Female" required> Female
+        <input type="radio" id="language-other" name="language" value="Other" required> Other<br>
+
+        <label for="bio">Deskripsi Diri Saya :</label><br>
+        <textarea id="bio" name="bio" required></textarea><br>
+
+        <input type="submit" value="register">
+    </form>
+</body>
+</html>
