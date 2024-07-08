@@ -25,8 +25,8 @@ body {
 }
 
 .container {
-    display: grid;
-    gap: 20px;
+    display: grid; /* Menggunakan CSS Grid untuk tata letak */
+    gap: 20px; /* Jarak antar elemen grid */
     padding: 20px;
 }
 
@@ -40,7 +40,7 @@ body {
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* Efek hover pada card */
 }
 
 .card img {
@@ -70,21 +70,21 @@ body {
     color: #333;
 }
 
-/* Default layout: 3 columns */
+/* SOAL 1*/
 .container {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* 3 kolom dalam 1 baris */
 }
 
-/* Tablet layout: 2 columns */
+/* SOAL 2*/
 @media (max-width: 992px) {
     .container {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); /* 2 kolom dalam 1 baris */
     }
 }
 
-/* Mobile layout: 1 column */
+/* SOAL 3*/
 @media (max-width: 600px) {
     .container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* 1 kolom dalam 1 baris */
     }
 }
