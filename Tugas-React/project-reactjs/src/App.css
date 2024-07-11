@@ -62,4 +62,16 @@ hr {
   background-color: red;
 }
 
+.task-container {
+  background-color: white;
+  /* width: 300px; */
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
 
+.time-container {
+  text-align: center;
+
+  /* margin-bottom: 20px; */
+}
