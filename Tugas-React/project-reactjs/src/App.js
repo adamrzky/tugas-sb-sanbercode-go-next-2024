@@ -1,15 +1,13 @@
 import React from "react";
+import TugasCRUDHooks from "./TugasCRUDHooks/TugasCRUDHooks";
 import "./App.css";
-import TugasIntroReact from "./Tugas-Intro-ReactJS/TugasIntroReact";
-import TugasHooks from "./Tugas-Hooks/TugasHooks";
 
-const App = () => {
+function App() {
   return (
-    <div>
-      <TugasHooks />
-      <TugasIntroReact />
+    <div className="App">
+      <TugasCRUDHooks />
     </div>
   );
-};
+}
 
 export default App;
