@@ -1,11 +1,11 @@
-import React from "react";
-import TugasCRUDHooks from "./TugasCRUDHooks/TugasCRUDHooks";
-import "./App.css";
+import React from 'react';
+import './App.css';
+import Books from './TugasAxios/Books';
 
 function App() {
   return (
     <div className="App">
-      <TugasCRUDHooks />
+      <Books />
     </div>
   );
 }
