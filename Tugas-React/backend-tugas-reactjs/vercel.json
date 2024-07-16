@@ -10,7 +10,7 @@
   ],
   "functions": {
     "api/vercel.go": {
-      "maxDuration": 100
+      "maxDuration": 60
     }
   }
 }
