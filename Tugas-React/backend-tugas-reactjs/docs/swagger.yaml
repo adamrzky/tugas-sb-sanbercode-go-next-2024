@@ -29,6 +29,39 @@ definitions:
       name:
         type: string
     type: object
+  controllers.bookInput:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      price:
+        type: string
+      release_year:
+        maximum: 2021
+        minimum: 1980
+        type: integer
+      title:
+        type: string
+      total_page:
+        type: integer
+    required:
+    - description
+    - image_url
+    - price
+    - release_year
+    - title
+    - total_page
+    type: object
+  controllers.footballerInput:
+    properties:
+      age:
+        type: integer
+      name:
+        type: string
+      nationality:
+        type: string
+    type: object
   controllers.movieInput:
     properties:
       age_rating_category_id:
@@ -52,6 +85,44 @@ definitions:
         type: string
       userID:
         type: integer
+    type: object
+  models.Book:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      price:
+        type: string
+      release_year:
+        type: integer
+      thickness:
+        type: string
+      title:
+        type: string
+      total_page:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Footballer:
+    properties:
+      age:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      nationality:
+        type: string
+      updated_at:
+        type: string
     type: object
   models.Movie:
     properties:
@@ -210,6 +281,250 @@ paths:
       summary: Get Movies.
       tags:
       - AgeRatingCategory
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Book'
+            type: array
+      summary: Get all books
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: Add a new book to the library
+      parameters:
+      - default: Bearer <add_token_here>
+        description: Insert JWT token here
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Create book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.bookInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new book
+      tags:
+      - books
+  /books/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a book from the library
+      parameters:
+      - default: Bearer <add_token_here>
+        description: Insert JWT token here
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: book deleted
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a book
+      tags:
+      - books
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information about a book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+      summary: Get a book by ID
+      tags:
+      - books
+    patch:
+      consumes:
+      - application/json
+      description: Update book details
+      parameters:
+      - default: Bearer <add_token_here>
+        description: Insert JWT token here
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.bookInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Book'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a book
+      tags:
+      - books
+  /footballers:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Footballer'
+            type: array
+      summary: Get all Footballer.
+      tags:
+      - Footballer
+    post:
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: the body to create a new Footballer
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.footballerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Footballer'
+      security:
+      - BearerToken: []
+      summary: Create New Footballer.
+      tags:
+      - Footballer
+  /footballers/{id}:
+    delete:
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Footballer id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one Footballer.
+      tags:
+      - Footballer
+    get:
+      parameters:
+      - description: Footballer id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Footballer'
+      summary: Get Footballer.
+      tags:
+      - Footballer
+    patch:
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Footballer id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update footballer
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.footballerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Footballer'
+      security:
+      - BearerToken: []
+      summary: Update Footballer.
+      tags:
+      - Footballer
   /login:
     post:
       description: Logging in to get jwt token to access admin or user api by roles.

@@ -13,11 +13,11 @@ import (
 )
 
 var (
-	app *gin.Engine
+	App *gin.Engine
 )
 
 func init() {
-	app = gin.New()
+	App = gin.New()
 
 	environment := utils.Getenv("ENVIRONMENT", "development")
 
@@ -38,15 +38,13 @@ func init() {
 		docs.SwaggerInfo.Schemes = []string{"https"}
 	}
 	db := config.ConnectDataBase()
-	sqlDB, _ := db.DB()
-	defer sqlDB.Close()
 
-	routes.SetupRouter(db, app)
+	routes.SetupRouter(db, App)
 }
 
 // Entrypoint
 func Handler(w http.ResponseWriter, r *http.Request) {
-	app.ServeHTTP(w, r)
+	App.ServeHTTP(w, r)
 }
 
 // func Handler(w http.ResponseWriter, rq *http.Request) {

@@ -52,6 +52,18 @@ func SetupRouter(db *gorm.DB, r *gin.Engine) {
 	ratingMiddlewareRoute.PUT("/:id", controllers.UpdateRating)
 	ratingMiddlewareRoute.DELETE("/:id", controllers.DeleteRating)
 
+	r.GET("/footballers", controllers.GetAllFootballer)
+	r.POST("/footballers", controllers.CreateFootballer)
+	r.GET("/footballers/:id", controllers.GetFootballerById)
+	r.PUT("/footballers/:id", controllers.UpdateFootballer)
+	r.DELETE("/footballers/:id", controllers.DeleteFootballer)
+
+	// r.GET("/books", controllers.GetAllBooks)
+	// r.POST("/books", controllers.CreateBook)
+	// r.GET("/books/:id", controllers.GetBookByID)
+	// r.PUT("/books/:id", controllers.UpdateBook)
+	// r.DELETE("/books/:id", controllers.DeleteBook)
+
 	// Adding book routes
 	bookRoute := r.Group("/books")
 	bookRoute.Use(middlewares.JwtAuthMiddleware())   // Protect book routes with JWT Middleware
@@ -62,5 +74,4 @@ func SetupRouter(db *gorm.DB, r *gin.Engine) {
 	bookRoute.DELETE("/:id", controllers.DeleteBook) // Delete a book
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 }

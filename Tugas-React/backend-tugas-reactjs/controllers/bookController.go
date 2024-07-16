@@ -1,56 +1,56 @@
 package controllers
 
 import (
-	"backend-tugas-reactjs/models"
 	"net/http"
-	"net/url"
+	"time"
+
+	"backend-tugas-reactjs/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-// GetAllBooks retrieves all books
+type bookInput struct {
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+	ImageURL    string `json:"image_url" binding:"required,url"`
+	ReleaseYear int    `json:"release_year" binding:"required,gte=1980,lte=2021"`
+	Price       string `json:"price" binding:"required"`
+	TotalPage   int    `json:"total_page" binding:"required"`
+}
+
+// GetAllBooks godoc
+// @Summary Get all books
+// @Description Retrieve a list of books
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Book
+// @Router /books [get]
 func GetAllBooks(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	var books []models.Book
-	if result := db.Find(&books); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, books)
+	db.Find(&books)
+	c.JSON(http.StatusOK, gin.H{"data": books})
 }
 
-// GetBookByID retrieves a single book by ID
-func GetBookByID(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
-	var book models.Book
-	if result := db.First(&book, id); result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
-		return
-	}
-	c.JSON(http.StatusOK, book)
-}
-
-// CreateBook creates a new book
+// CreateBook godoc
+// @Summary Create a new book
+// @Description Add a new book to the library
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Insert JWT token here" default(Bearer <add_token_here>)
+// @Param book body bookInput true "Create book"
+// @Success 200 {object} models.Book
+// @Router /books [post]
 func CreateBook(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	var input models.BookInput
-
+	var input bookInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	// Validation
-	errors := validateBook(input)
-	if len(errors) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": errors})
-		return
-	}
-
-	// Convert total_page to thickness
-	thickness := convertThickness(input.TotalPage)
 
 	book := models.Book{
 		Title:       input.Title,
@@ -59,88 +59,94 @@ func CreateBook(c *gin.Context) {
 		ReleaseYear: input.ReleaseYear,
 		Price:       input.Price,
 		TotalPage:   input.TotalPage,
-		Thickness:   thickness,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
 	}
+	db := c.MustGet("db").(*gorm.DB)
+	db.Create(&book)
 
-	if result := db.Create(&book); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, book)
+	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
-// UpdateBook updates an existing book
-func UpdateBook(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
+// GetBookByID godoc
+// @Summary Get a book by ID
+// @Description Get detailed information about a book
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Book ID"
+// @Success 200 {object} models.Book
+// @Router /books/{id} [get]
+func GetBookByID(c *gin.Context) {
 	var book models.Book
-	if result := db.First(&book, id); result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Book not found"})
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
 
-	// Bind input
-	var input models.BookInput
+	c.JSON(http.StatusOK, gin.H{"data": book})
+}
+
+// UpdateBook godoc
+// @Summary Update a book
+// @Description Update book details
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Insert JWT token here" default(Bearer <add_token_here>)
+// @Param id path int true "Book ID"
+// @Param book body bookInput true "Update book"
+// @Success 200 {object} models.Book
+// @Router /books/{id} [patch]
+func UpdateBook(c *gin.Context) {
+	var book models.Book
+	db := c.MustGet("db").(*gorm.DB)
+	if err := db.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
+		return
+	}
+
+	var input bookInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Validation
-	errors := validateBook(input)
-	if len(errors) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"errors": errors})
-		return
-	}
-
-	// Convert total_page to thickness
-	thickness := convertThickness(input.TotalPage)
-
-	updatedData := models.Book{
+	updateData := models.Book{
 		Title:       input.Title,
 		Description: input.Description,
 		ImageURL:    input.ImageURL,
 		ReleaseYear: input.ReleaseYear,
 		Price:       input.Price,
 		TotalPage:   input.TotalPage,
-		Thickness:   thickness,
+		UpdatedAt:   time.Now(),
 	}
 
-	db.Model(&book).Updates(updatedData)
-	c.JSON(http.StatusOK, book)
+	db.Model(&book).Updates(updateData)
+	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
-// DeleteBook removes a book
+// DeleteBook godoc
+// @Summary Delete a book
+// @Description Remove a book from the library
+// @Tags books
+// @Accept  json
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Insert JWT token here" default(Bearer <add_token_here>)
+// @Param id path int true "Book ID"
+// @Success 200 {object} map[string]bool "book deleted"
+// @Router /books/{id} [delete]
 func DeleteBook(c *gin.Context) {
+	var book models.Book
 	db := c.MustGet("db").(*gorm.DB)
-	id := c.Param("id")
-	if result := db.Delete(&models.Book{}, id); result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	if err := db.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Book deleted"})
-}
 
-// validateBook checks the fields for book creation and update
-func validateBook(input models.BookInput) map[string]string {
-	errors := make(map[string]string)
-	if _, err := url.ParseRequestURI(input.ImageURL); err != nil {
-		errors["image_url"] = "The image URL must be valid"
-	}
-	if input.ReleaseYear < 1980 || input.ReleaseYear > 2021 {
-		errors["release_year"] = "The release year must be between 1980 and 2021"
-	}
-	return errors
-}
-
-// convertThickness determines the book thickness based on page count
-func convertThickness(totalPage int) string {
-	switch {
-	case totalPage <= 100:
-		return "tipis"
-	case totalPage <= 200:
-		return "sedang"
-	default:
-		return "tebal"
-	}
+	db.Delete(&book)
+	c.JSON(http.StatusOK, gin.H{"data": true})
 }
