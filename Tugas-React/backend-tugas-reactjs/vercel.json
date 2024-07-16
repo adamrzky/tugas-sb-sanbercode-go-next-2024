@@ -1,12 +1,16 @@
 {
-    "github": {
-      "silent": true
-    },
-    "rewrites": [
-      {
-        "source": "/(.*)",
-        "destination": "/api/vercel.go"
-      }
-    ]
+  "github": {
+    "silent": true
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api/vercel.go"
+    }
+  ],
+  "functions": {
+    "api/vercel.go": {
+      "maxDuration": 100
+    }
+  }
 }
-  
