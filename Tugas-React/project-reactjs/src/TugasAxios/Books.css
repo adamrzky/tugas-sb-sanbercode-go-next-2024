@@ -34,7 +34,7 @@ h1 {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-    width: 100%; /* Make the form take the full width of the container */
+    width: 100%;
 }
 
 .form input {
@@ -43,7 +43,7 @@ h1 {
     border-radius: 5px;
     background-color: #2e2e2e;
     color: #ffffff;
-    width: 100%; /* Make input fields take the full width of the form */
+    width: 100%;
 }
 
 .btn-submit {
@@ -54,7 +54,7 @@ h1 {
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100%; /* Make the button take the full width of the form */
+    width: 100%;
 }
 
 .btn-submit:hover {
@@ -63,7 +63,7 @@ h1 {
 
 .book-list {
     margin-top: 20px;
-    width: 100%; /* Make the table take the full width of the container */
+    width: 100%;
 }
 
 .book-list table {
@@ -114,4 +114,11 @@ h1 {
 
 .btn-delete:hover {
     background-color: #c82333;
+}
+
+.loading-message {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #28a745;
+    text-align: center;
 }
