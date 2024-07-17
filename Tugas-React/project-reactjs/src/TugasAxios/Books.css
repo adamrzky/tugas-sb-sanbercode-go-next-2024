@@ -11,13 +11,16 @@ body {
 }
 
 .container {
-    width: 80%;
-    max-width: 1000px;
+    width: 100%;
+    max-width: 600px; /* Adjusted to make the form wider */
     margin: 20px auto;
-    padding: 20px;
+    padding: 40px;
     background-color: #1e1e1e;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align the items */
 }
 
 h1 {
@@ -31,6 +34,7 @@ h1 {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
+    width: 100%; /* Make the form take the full width of the container */
 }
 
 .form input {
@@ -39,6 +43,7 @@ h1 {
     border-radius: 5px;
     background-color: #2e2e2e;
     color: #ffffff;
+    width: 100%; /* Make input fields take the full width of the form */
 }
 
 .btn-submit {
@@ -49,6 +54,7 @@ h1 {
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%; /* Make the button take the full width of the form */
 }
 
 .btn-submit:hover {
@@ -57,6 +63,7 @@ h1 {
 
 .book-list {
     margin-top: 20px;
+    width: 100%; /* Make the table take the full width of the container */
 }
 
 .book-list table {

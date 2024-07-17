@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Books.css'; // Mengimpor CSS untuk styling
+import './Books.css'; 
 
 const baseURL = "https://backend-tugas-reactjs-mocha.vercel.app";
 
@@ -59,7 +59,7 @@ function Books() {
             total_page: parseInt(formData.total_page, 10)
         };
     
-        // Periksa validitas release_year
+   
         if (payload.release_year < 0 || payload.release_year > currentYear) {
             alert(`Release Year harus antara 0 dan ${currentYear}`);
             return;
