@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Books.css'; // Mengimpor CSS untuk styling
 
 const baseURL = "https://backend-tugas-reactjs-mocha.vercel.app";
 
@@ -25,25 +26,23 @@ function Books() {
         const userData = { username: "adam2", password: "1234qwer" };
         axios.post(`${baseURL}/login`, userData)
             .then(response => {
-                console.log('Login successful:', response.data);
                 setToken(response.data.token);
                 fetchBooks(response.data.token);
             })
-            .catch(error => console.error('Failed to login:', error));
+            .catch(error => console.error('Gagal login:', error));
     };
 
     const fetchBooks = (authToken) => {
-      axios.get(`${baseURL}/books`, {
-          headers: {
-              Authorization: `Bearer ${authToken}`
-          }
-      })
-      .then(response => {
-          console.log('Data buku berhasil diambil:', response.data);
-          setBooks(response.data.data); // Menggunakan data yang benar dari respons
-      })
-      .catch(error => console.error('Gagal mengambil data:', error));
-  };
+        axios.get(`${baseURL}/books`, {
+            headers: {
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+        .then(response => {
+            setBooks(response.data.data);
+        })
+        .catch(error => console.error('Gagal mengambil data:', error));
+    };
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -52,14 +51,30 @@ function Books() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const currentYear = new Date().getFullYear();
+        const payload = {
+            ...formData,
+            release_year: parseInt(formData.release_year, 10),
+            price: formData.price,
+            total_page: parseInt(formData.total_page, 10)
+        };
+    
+        // Periksa validitas release_year
+        if (payload.release_year < 0 || payload.release_year > currentYear) {
+            alert(`Release Year harus antara 0 dan ${currentYear}`);
+            return;
+        }
+    
         if (editing) {
-            updateBook(editingId, formData);
+            updateBook(editingId, payload);
         } else {
-            addBook(formData);
+            addBook(payload);
         }
     };
-
+    
     const addBook = (bookData) => {
+        console.log("Data buku yang dikirim:", bookData);
+    
         axios.post(`${baseURL}/books`, bookData, {
             headers: { Authorization: `Bearer ${token}` }
         })
@@ -74,8 +89,15 @@ function Books() {
                 total_page: ''
             });
         })
-        .catch(error => console.error('Failed to add book:', error));
+        .catch(error => {
+            console.error('Gagal menambah buku:', error);
+            if (error.response) {
+                console.error('Response error:', error.response.data);
+            }
+        });
     };
+    
+    
 
     const updateBook = (id, bookData) => {
         axios.patch(`${baseURL}/books/${id}`, bookData, {
@@ -95,7 +117,7 @@ function Books() {
             });
             setEditingId(null);
         })
-        .catch(error => console.error('Failed to update book:', error));
+        .catch(error => console.error('Gagal mengupdate buku:', error));
     };
 
     const deleteBook = (id) => {
@@ -105,30 +127,46 @@ function Books() {
         .then(() => {
             setBooks(books.filter(book => book.id !== id));
         })
-        .catch(error => console.error('Failed to delete book:', error));
+        .catch(error => console.error('Gagal menghapus buku:', error));
     };
 
     return (
-        <div>
+        <div className="container">
             <h1>Books Manager</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="form">
                 <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" required />
                 <input type="text" name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" required />
                 <input type="url" name="image_url" value={formData.image_url} onChange={handleInputChange} placeholder="Image URL" required />
                 <input type="number" name="release_year" value={formData.release_year} onChange={handleInputChange} placeholder="Release Year" required />
                 <input type="text" name="price" value={formData.price} onChange={handleInputChange} placeholder="Price" required />
                 <input type="number" name="total_page" value={formData.total_page} onChange={handleInputChange} placeholder="Total Pages" required />
-                <button type="submit">{editing ? "Update" : "Add"}</button>
+                <button type="submit" className="btn-submit">{editing ? "Update" : "Add"}</button>
             </form>
-            <ul>
-                {books.map((book, index) => (
-                    <li key={book.id}>
-                        {book.title} - {book.description}
-                        <button onClick={() => { setEditing(true); setEditingId(book.id); setFormData(book); }}>Edit</button>
-                        <button onClick={() => deleteBook(book.id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
+            <div className="book-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {books.map((book, index) => (
+                            <tr key={book.id}>
+                                <td>{index + 1}</td>
+                                <td>{book.title}</td>
+                                <td>{book.description}</td>
+                                <td>
+                                    <button onClick={() => { setEditing(true); setEditingId(book.id); setFormData(book); }} className="btn-edit">Edit</button>
+                                    <button onClick={() => deleteBook(book.id)} className="btn-delete">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
