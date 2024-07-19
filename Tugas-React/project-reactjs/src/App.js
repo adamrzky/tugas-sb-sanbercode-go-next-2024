@@ -1,11 +1,12 @@
 import React from 'react';
 import AppRouter from './TugasRouter/AppRouter';
+import { ThemeProvider } from './TugasRouter/ThemeContext';
 
 function App() {
   return (
-    <div>
+    <ThemeProvider>
       <AppRouter />
-    </div>
+    </ThemeProvider>
   );
 }
 
