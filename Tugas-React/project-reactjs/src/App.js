@@ -1,12 +1,12 @@
 import React from 'react';
-import Books from './TugasContext/Books';
+import AppRouter from './TugasRouter/AppRouter';
 
 function App() {
-    return (
-        <div>
-            <Books />
-        </div>
-    );
+  return (
+    <div>
+      <AppRouter />
+    </div>
+  );
 }
 
 export default App;
