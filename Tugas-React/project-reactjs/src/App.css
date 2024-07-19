@@ -196,6 +196,8 @@ button:hover {
 .book-list table {
   width: 100%;
   border-collapse: collapse;
+  color: white;
+  background-color: #f5f5f5;
 }
 
 .book-list th, .book-list td {

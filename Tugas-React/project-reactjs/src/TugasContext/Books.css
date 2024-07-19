@@ -39,7 +39,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     /* background-color: #2e2e2e; */
-    color: hsl(0, 0%, 0%);
+    color: #000000;
     width: 100%;
 }
 
@@ -47,8 +47,8 @@
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #28a745;
-    color: #fff;
+    /* background-color: #28a745; */
+    color: #000000;
     cursor: pointer;
     transition: background-color 0.3s;
     width: 100%;
