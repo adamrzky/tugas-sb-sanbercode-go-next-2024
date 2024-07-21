@@ -1,12 +1,22 @@
 import React from 'react';
-import AppRouter from './TugasRouter/AppRouter';
-import { ThemeProvider } from './TugasRouter/ThemeContext';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Home from './Home';
+import Login from './Login';
+import './App.css';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppRouter />
-    </ThemeProvider>
+    <Router>
+      <Navbar />
+      <div className="app-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          {/* Tambahkan rute lainnya jika ada */}
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
