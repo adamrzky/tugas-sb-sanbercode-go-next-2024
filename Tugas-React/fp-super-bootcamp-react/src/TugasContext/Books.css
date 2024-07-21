@@ -1,0 +1,121 @@
+.books body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.books .container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 40px;
+    /* background-color: #1e1e1e; */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    align-items: center;
+}
+
+.books h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #28a745;
+}
+
+.books .form {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.books .form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* background-color: #2e2e2e; */
+    color: #000000;
+    width: 100%;
+}
+
+.books .btn-submit {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    /* background-color: #28a745; */
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.books .btn-submit:hover {
+    background-color: #218838;
+}
+
+.books .book-list {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.books .book-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.books .book-list th, .books .book-list td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.books .book-list th {
+    background-color: #28a745;
+}
+
+.books .book-list tbody tr:nth-child(odd) {
+    background-color: #333;
+}
+
+.books .book-list tbody tr:nth-child(even) {
+    background-color: #444;
+}
+
+.books .book-list button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.books .btn-edit {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.books .btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.books .btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.books .btn-delete:hover {
+    background-color: #c82333;
+}
+
+.books .loading-message {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #28a745;
+    text-align: center;
+}
