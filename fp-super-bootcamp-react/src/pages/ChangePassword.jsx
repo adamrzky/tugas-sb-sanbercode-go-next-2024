@@ -1,6 +1,7 @@
+// ChangePassword.jsx
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { UserContext } from '../contexts/UserContext'; // Pastikan path benar
+import { UserContext } from '../contexts/UserContext';
 
 const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState('');
@@ -10,52 +11,28 @@ const ChangePassword = () => {
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
-        if (!oldPassword || !newPassword) {
-            setMessage("Please fill in all fields.");
-            return;
-        }
         try {
             const response = await axios.post('http://localhost:8080/auth/change-password', {
                 old_password: oldPassword,
                 new_password: newPassword
             }, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`  // Pastikan token ini valid
-                }
+                headers: { Authorization: `Bearer ${user.token}` }
             });
-            if (response.data.code === 200) {
-                setMessage('Password successfully changed.');
-            } else {
-                setMessage(response.data.message || 'Failed to change password.');  // Gunakan pesan dari server jika tersedia
-            }
+            setMessage(response.data.message);
         } catch (error) {
-            setMessage('Error changing password. ' + (error.response?.data?.message || error.message));
-            console.error(error);
+            setMessage('Failed to change password. Please try again.');
         }
     };
-    
 
     return (
-        <div className="login-container"> {/* Using the same style as login for consistency */}
-            <form onSubmit={handleChangePassword} className="login-form">
-                <h2>Change Password</h2>
-                <input
-                    type="password"
-                    placeholder="Old Password"
-                    value={oldPassword}
-                    onChange={e => setOldPassword(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChange={e => setNewPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Change Password</button>
-                <div>{message}</div>
+        <div>
+            <h2>Change Password</h2>
+            <form onSubmit={handleChangePassword}>
+                <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} placeholder="Old Password" required />
+                <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New Password" required />
+                <button type="submit">Submit</button>
             </form>
+            {message && <p>{message}</p>}
         </div>
     );
 };
