@@ -6,11 +6,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed; /* Fix the navbar to the top of the page */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* Ensure the navbar is on top of other content */
+  z-index: 1000;
 }
 
 .navbar-container {
@@ -38,7 +38,7 @@
   color: white;
   text-decoration: none;
   font-size: 18px;
-  position: relative;  /* Needed for dropdown positioning */
+  position: relative;
 }
 
 .nav-item:hover, .dropdown-content a:hover {
@@ -48,7 +48,7 @@
 .user-icon {
   font-size: 24px;
   cursor: pointer;
-  margin-left: 20px; /* Add some spacing around the user icon */
+  margin-left: 20px;
 }
 
 .dropdown {
@@ -64,7 +64,7 @@
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   right: 0;
-  border-radius: 4px; /* Rounded corners for dropdown */
+  border-radius: 4px;
 }
 
 .dropdown-content a {
@@ -87,7 +87,32 @@
   color: #ff6347;
 }
 
-/* Add margin to the top of the content to prevent it from being hidden behind the fixed navbar */
+.button-logout {
+  background-color: #ff6347; /* Bright color for visibility */
+  color: white; /* White text color for better visibility */
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.button-logout:hover {
+  background-color: #e53e30; /* Slightly darker on hover */
+}
+
+/* Adjust content margin to prevent hidden behind fixed navbar */
 .content {
-  margin-top: 60px; /* Adjust based on the height of your navbar */
+  margin-top: 60px;
+}
+.user-info {
+  display: flex;
+  align-items: center;  /* Pastikan konten di sejajarkan vertikal di tengah */
+  margin-left: auto;  /* Dorong ke kanan */
+  font-size: 18px;  /* Sesuaikan ukuran font sesuai kebutuhan */
+}
+
+.user-email {
+  margin-left: 10px;  /* Spasi tambahan dari ikon */
+  white-space: nowrap;  /* Pastikan email tidak wrap ke baris baru */
 }

@@ -74,44 +74,46 @@ const RestaurantList = () => {
                     <h2>{selectedRestaurant.Name}</h2>
                     <p>{selectedRestaurant.Address}</p>
 
-                    <div className="modal-section">
-                        <h3>Menu:</h3>
-                        {selectedRestaurant.Foods && selectedRestaurant.Foods.length > 0 ? (
-                            <ul>
-                                {selectedRestaurant.Foods.map((food) => (
-                                    <li key={food.ID} className="food-item">
-                                        <img 
-                                            src={`https://picsum.photos/100/100?random=${food.ID}`} 
-                                            alt={food.Name} 
-                                            className="food-image" 
-                                        />
-                                        <div>
-                                            <h4>{food.Name}</h4>
-                                            <p>{food.Description}</p>
-                                            <p>Price: ${food.Price}</p>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No menu items available.</p>
-                        )}
-                    </div>
+                    <div className="modal-scrollable-content">
+                        <div className="modal-section">
+                            <h3>Menu:</h3>
+                            {selectedRestaurant.Foods && selectedRestaurant.Foods.length > 0 ? (
+                                <ul>
+                                    {selectedRestaurant.Foods.map((food) => (
+                                        <li key={food.ID} className="food-item">
+                                            <img 
+                                                src={`https://picsum.photos/100/100?random=${food.ID}`} 
+                                                alt={food.Name} 
+                                                className="food-image" 
+                                            />
+                                            <div>
+                                                <h4>{food.Name}</h4>
+                                                <p>{food.Description}</p>
+                                                <p>Price: ${food.Price}</p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No menu items available.</p>
+                            )}
+                        </div>
 
-                    <div className="modal-section">
-                        <h3>Reviews:</h3>
-                        {selectedRestaurant.Reviews && selectedRestaurant.Reviews.length > 0 ? (
-                            <ul>
-                                {selectedRestaurant.Reviews.map((review) => (
-                                    <li key={review.ID} className="review-item">
-                                        <p><strong>Rating:</strong> {review.Rating}/5</p>
-                                        <p><strong>Comment:</strong> {review.Comment}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No reviews yet.</p>
-                        )}
+                        <div className="modal-section">
+                            <h3>Reviews:</h3>
+                            {selectedRestaurant.Reviews && selectedRestaurant.Reviews.length > 0 ? (
+                                <ul>
+                                    {selectedRestaurant.Reviews.map((review) => (
+                                        <li key={review.ID} className="review-item">
+                                            <p><strong>Rating:</strong> {review.Rating}/5</p>
+                                            <p><strong>Comment:</strong> {review.Comment}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No reviews yet.</p>
+                            )}
+                        </div>
                     </div>
 
                     <button onClick={closeModal} className="close-button">Close</button>
