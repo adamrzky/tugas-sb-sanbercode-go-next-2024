@@ -12,7 +12,7 @@ const ChangePassword = () => {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/auth/change-password', {
+            const response = await axios.post('https://fp-super-bootcamp-go.vercel.app/auth/change-password', {
                 old_password: oldPassword,
                 new_password: newPassword
             }, {

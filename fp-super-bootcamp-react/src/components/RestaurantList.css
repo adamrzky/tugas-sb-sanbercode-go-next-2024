@@ -55,8 +55,8 @@ body {
 
 .restaurant-rating {
     font-size: 16px;
-    color: #fff;
-    background-color: #ff6347;
+    color: #000000;
+    /* background-color: #ff6347; */
     padding: 5px 10px;
     border-radius: 4px;
     display: inline-block;
@@ -184,3 +184,32 @@ body {
 .review-button:hover {
     background-color: darkblue;
 }
+
+.star {
+    color: gold;
+    font-size: 20px;
+  }
+  
+  .restaurant-rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .restaurant-card {
+    margin-bottom: 20px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    width: 300px; /* Adjust width as necessary */
+  }
+  
+  .restaurant-image {
+    width: 100%;
+    height: 200px; /* Adjust height as necessary */
+    object-fit: cover;
+  }
+  
+  .restaurant-details {
+    padding: 10px;
+  }
+  
