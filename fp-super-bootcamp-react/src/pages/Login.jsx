@@ -1,14 +1,13 @@
-// src/pages/Login.jsx
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/UserContext';
-import './Login.css'; // Pastikan ini benar
+import './Login.css';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -21,13 +20,27 @@ const Login = () => {
             });
             if (response.data.code === 200) {
                 setUser({ email, token: response.data.token });
-                navigate('/'); // Redirect to home
+                Swal.fire({ // Menampilkan SweetAlert sukses
+                    icon: 'success',
+                    title: 'Logged in!',
+                    text: 'You have successfully logged in.',
+                }).then(() => {
+                    navigate('/'); // Redirect ke home setelah mengklik OK
+                });
             } else {
-                setError('Login failed. Please check your credentials.');
+                Swal.fire({ // Menampilkan SweetAlert error
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: 'Please check your credentials.',
+                });
             }
         } catch (error) {
-            setError('Login error. Please try again later.');
-            console.error(error);
+            Swal.fire({ // Menampilkan SweetAlert untuk error teknis
+                icon: 'error',
+                title: 'Login Error',
+                text: 'Login error. Please try again later.',
+            });
+            console.error('Login request failed:', error);
         }
     };
 
@@ -38,7 +51,6 @@ const Login = () => {
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email"/>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"/>
                 <button type="submit">Login</button>
-                {error && <p>{error}</p>}
             </form>
         </div>
     );

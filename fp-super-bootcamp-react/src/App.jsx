@@ -5,6 +5,7 @@ import { UserProvider } from './contexts/UserContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import ChangePassword from './pages/ChangePassword'; // Import ChangePassword
 
 
@@ -16,6 +17,7 @@ function App() {
         <Routes> {/* Mengganti Switch dengan Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/change-password" element={<ChangePassword />} /> {/* Route for Change Password */}
           </Routes>
       </Router>

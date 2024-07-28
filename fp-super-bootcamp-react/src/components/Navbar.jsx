@@ -19,8 +19,8 @@ const Navbar = () => {
                 <Link to="/" className="navbar-logo">Culinary Reviews</Link>
                 <div className="menu">
                     <Link to="/" className="nav-item">Home</Link>
-                    <Link to="/reviews" className="nav-item">Reviews</Link>
-                    <Link to="/manage" className="nav-item">Manage Users</Link>
+                    {/* <Link to="/reviews" className="nav-item">Reviews</Link> */}
+                    {/* <Link to="/manage" className="nav-item">Manage Users</Link> */}
                     {user ? (
                         <div className="dropdown">
                             <div className="user-info">

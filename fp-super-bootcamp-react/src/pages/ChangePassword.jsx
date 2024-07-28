@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../contexts/UserContext';
+import './Login.css';  // Menggunakan CSS yang sama untuk konsistensi
 
 const ChangePassword = () => {
     const [oldPassword, setOldPassword] = useState('');
@@ -18,21 +19,23 @@ const ChangePassword = () => {
             }, {
                 headers: { Authorization: `Bearer ${user.token}` }
             });
-            setMessage(response.data.message);
+            if (response.data.message) {
+                setMessage(response.data.message);
+            }
         } catch (error) {
             setMessage('Failed to change password. Please try again.');
         }
     };
 
     return (
-        <div>
-            <h2>Change Password</h2>
-            <form onSubmit={handleChangePassword}>
+        <div className="login-container">  
+            <form onSubmit={handleChangePassword} className="login-form">
+                <h2>Change Password</h2>
                 <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} placeholder="Old Password" required />
                 <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="New Password" required />
                 <button type="submit">Submit</button>
+                {message && <p>{message}</p>}
             </form>
-            {message && <p>{message}</p>}
         </div>
     );
 };

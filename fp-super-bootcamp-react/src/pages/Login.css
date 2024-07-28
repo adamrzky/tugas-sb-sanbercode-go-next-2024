@@ -1,36 +1,42 @@
 /* src/styles/Login.css */
 .login-container {
-    display: flex;
-    justify-content: center; /* Horisontal center */
-    align-items: center; /* Vertikal center */
-    height: 100vh; /* Full height */
-    background-color: #f4f4f4; /* Background color */
-  }
-  
-  .login-form {
-    padding: 20px;
-    background: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    width: 300px; /* Lebar form */
-  }
-  
-  .login-form input, .login-form button {
-    width: 100%; /* Full width */
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  .login-form button {
-    background-color: #0056b3; /* Background button */
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .login-form button:hover {
-    background-color: #004494; /* Hover state */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.login-form {
+  padding: 40px; /* Penyesuaian padding */
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  width: 350px; /* Sedikit lebih lebar untuk aksesibilitas */
+}
+
+.login-form input, .login-form button {
+  width: 100%;
+  padding: 12px; /* Lebih besar untuk kenyamanan */
+  margin-top: 15px; /* Lebih banyak ruang */
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 16px; /* Ukuran font yang lebih besar untuk membaca lebih mudah */
+}
+
+.login-form button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Transisi halus */
+}
+
+.login-form button:hover {
+  background-color: #004494; /* Efek hover yang lebih jelas */
+}
+
+.login-form p {
+  color: red; /* Warna merah untuk pesan error */
+  margin-top: 20px; /* Margin untuk memisahkan pesan error dari tombol */
+}

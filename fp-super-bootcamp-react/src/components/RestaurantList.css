@@ -187,7 +187,7 @@ body {
 
 .star {
     color: gold;
-    font-size: 20px;
+    font-size: 30px;
   }
   
   .restaurant-rating {
@@ -212,4 +212,43 @@ body {
   .restaurant-details {
     padding: 10px;
   }
+  .star-rating .star {
+    cursor: pointer;
+    font-size: 40px;
+    color: #ddd; /* Default empty star color */
+    align-items: center;
+  }
   
+  .star-rating .star.filled {
+    color: orange; /* Filled star color */
+  }
+
+  .review-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .review-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Menjaga jarak antara bintang */
+  }
+  
+  .review-content {
+    flex-grow: 1;
+    margin-left: 20px;
+  }
+  
+  .review-email {
+    font-style: italic;
+    color: #666;
+  }
+  .review-list {
+    max-height: 300px; /* Atur tinggi maksimum sesuai dengan desain Anda */
+    overflow-y: auto;  /* Aktifkan scrollbar vertikal jika konten melebihi tinggi maksimum */
+  }
