@@ -29,7 +29,7 @@ const Navbar = () => {
                             </div>
                             <div className="dropdown-content">
                                 <Link to="/profile">Profile</Link>
-                                <Link to="/change-password">Change Password</Link>
+                                <Link to="/change-password">Management User</Link>
                                 <button onClick={handleLogout} className="button-logout">Logout</button>
                             </div>
                         </div>
