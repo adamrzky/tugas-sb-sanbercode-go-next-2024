@@ -40,12 +40,14 @@ export default function Home() {
 
       {/* Search and Category Links */}
       <div className="bg-white py-4 px-5 flex flex-col md:flex-row items-center justify-between">
-        <div className="flex items-center space-x-2 w-full mb-4 md:mb-0">
-          <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      <div className="flex items-center space-x-2 w-full mb-4 md:mb-0">
+        <div className="bg-pink-200 p-2 rounded-full">
+          <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <input className="flex-grow p-2 border border-gray-300 rounded" placeholder="Search Product..." />
         </div>
+        <input className="flex-grow p-2 border border-gray-300 rounded" placeholder="Search Product..." />
+      </div>
         <div className="flex items-center space-x-4 text-sm font-semibold text-gray-700">
           <a className="hover:text-pink-500 transition duration-300">Shirt</a>
           <a className="hover:text-pink-500 transition duration-300">Elektronik</a>
