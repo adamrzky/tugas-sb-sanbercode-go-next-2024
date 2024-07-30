@@ -109,6 +109,23 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.Dosen:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      jadwals:
+        items:
+          $ref: '#/definitions/models.JadwalKuliah'
+        type: array
+      mataKuliah:
+        type: string
+      nama:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   models.Footballer:
     properties:
       age:
@@ -122,6 +139,61 @@ definitions:
       nationality:
         type: string
       updated_at:
+        type: string
+    type: object
+  models.JadwalKuliah:
+    properties:
+      createdAt:
+        type: string
+      dosen:
+        $ref: '#/definitions/models.Dosen'
+      dosenID:
+        type: integer
+      hari:
+        type: string
+      id:
+        type: integer
+      jamMulai:
+        type: string
+      jamSelesai:
+        type: string
+      mahasiswa:
+        $ref: '#/definitions/models.Mahasiswa'
+      mahasiswaID:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.Mahasiswa:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      jadwals:
+        items:
+          $ref: '#/definitions/models.JadwalKuliah'
+        type: array
+      nama:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.MataKuliah:
+    properties:
+      createdAt:
+        type: string
+      dosens:
+        items:
+          $ref: '#/definitions/models.Dosen'
+        type: array
+      id:
+        type: integer
+      nama:
+        type: string
+      updatedAt:
         type: string
     type: object
   models.Movie:
@@ -412,6 +484,113 @@ paths:
       summary: Update a book
       tags:
       - books
+  /dosen:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all Dosen
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Dosen'
+            type: array
+      summary: Get all Dosen
+      tags:
+      - Dosen
+    post:
+      consumes:
+      - application/json
+      description: Create a new Dosen
+      parameters:
+      - description: Dosen
+        in: body
+        name: dosen
+        required: true
+        schema:
+          $ref: '#/definitions/models.Dosen'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      summary: Create new Dosen
+      tags:
+      - Dosen
+  /dosen/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Dosen by ID
+      parameters:
+      - description: Dosen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete a Dosen
+      tags:
+      - Dosen
+    get:
+      consumes:
+      - application/json
+      description: Get a Dosen by ID
+      parameters:
+      - description: Dosen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      summary: Get Dosen by ID
+      tags:
+      - Dosen
+    put:
+      consumes:
+      - application/json
+      description: Update an existing Dosen
+      parameters:
+      - description: Dosen ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Dosen
+        in: body
+        name: dosen
+        required: true
+        schema:
+          $ref: '#/definitions/models.Dosen'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      summary: Update a Dosen
+      tags:
+      - Dosen
   /footballers:
     get:
       produces:
@@ -525,6 +704,113 @@ paths:
       summary: Update Footballer.
       tags:
       - Footballer
+  /jadwal-kuliah:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all Jadwal Kuliah
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.JadwalKuliah'
+            type: array
+      summary: Get all Jadwal Kuliah
+      tags:
+      - JadwalKuliah
+    post:
+      consumes:
+      - application/json
+      description: Create a new Jadwal Kuliah
+      parameters:
+      - description: Jadwal Kuliah
+        in: body
+        name: jadwal
+        required: true
+        schema:
+          $ref: '#/definitions/models.JadwalKuliah'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      summary: Create new Jadwal Kuliah
+      tags:
+      - JadwalKuliah
+  /jadwal-kuliah/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Jadwal Kuliah by ID
+      parameters:
+      - description: Jadwal Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete a Jadwal Kuliah
+      tags:
+      - JadwalKuliah
+    get:
+      consumes:
+      - application/json
+      description: Get a Jadwal Kuliah by ID
+      parameters:
+      - description: Jadwal Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      summary: Get Jadwal Kuliah by ID
+      tags:
+      - JadwalKuliah
+    put:
+      consumes:
+      - application/json
+      description: Update an existing Jadwal Kuliah
+      parameters:
+      - description: Jadwal Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Jadwal Kuliah
+        in: body
+        name: jadwal
+        required: true
+        schema:
+          $ref: '#/definitions/models.JadwalKuliah'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      summary: Update a Jadwal Kuliah
+      tags:
+      - JadwalKuliah
   /login:
     post:
       description: Logging in to get jwt token to access admin or user api by roles.
@@ -546,6 +832,220 @@ paths:
       summary: Login as as user.
       tags:
       - Auth
+  /mahasiswa:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all Mahasiswa
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mahasiswa'
+            type: array
+      summary: Get all Mahasiswa
+      tags:
+      - Mahasiswa
+    post:
+      consumes:
+      - application/json
+      description: Create a new Mahasiswa
+      parameters:
+      - description: Mahasiswa
+        in: body
+        name: mahasiswa
+        required: true
+        schema:
+          $ref: '#/definitions/models.Mahasiswa'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      summary: Create new Mahasiswa
+      tags:
+      - Mahasiswa
+  /mahasiswa/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Mahasiswa by ID
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete a Mahasiswa
+      tags:
+      - Mahasiswa
+    get:
+      consumes:
+      - application/json
+      description: Get a Mahasiswa by ID
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      summary: Get Mahasiswa by ID
+      tags:
+      - Mahasiswa
+    put:
+      consumes:
+      - application/json
+      description: Update an existing Mahasiswa
+      parameters:
+      - description: Mahasiswa ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Mahasiswa
+        in: body
+        name: mahasiswa
+        required: true
+        schema:
+          $ref: '#/definitions/models.Mahasiswa'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      summary: Update a Mahasiswa
+      tags:
+      - Mahasiswa
+  /mata-kuliah:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all Mata Kuliah
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MataKuliah'
+            type: array
+      summary: Get all Mata Kuliah
+      tags:
+      - MataKuliah
+    post:
+      consumes:
+      - application/json
+      description: Create a new Mata Kuliah
+      parameters:
+      - description: Mata Kuliah
+        in: body
+        name: mataKuliah
+        required: true
+        schema:
+          $ref: '#/definitions/models.MataKuliah'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      summary: Create new Mata Kuliah
+      tags:
+      - MataKuliah
+  /mata-kuliah/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Mata Kuliah by ID
+      parameters:
+      - description: Mata Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete a Mata Kuliah
+      tags:
+      - MataKuliah
+    get:
+      consumes:
+      - application/json
+      description: Get a Mata Kuliah by ID
+      parameters:
+      - description: Mata Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      summary: Get Mata Kuliah by ID
+      tags:
+      - MataKuliah
+    put:
+      consumes:
+      - application/json
+      description: Update an existing Mata Kuliah
+      parameters:
+      - description: Mata Kuliah ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Mata Kuliah
+        in: body
+        name: mataKuliah
+        required: true
+        schema:
+          $ref: '#/definitions/models.MataKuliah'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      summary: Update a Mata Kuliah
+      tags:
+      - MataKuliah
   /movie/{id}:
     delete:
       description: Delete a movie by id.

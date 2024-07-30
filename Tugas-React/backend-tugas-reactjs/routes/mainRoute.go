@@ -73,5 +73,35 @@ func SetupRouter(db *gorm.DB, r *gin.Engine) {
 	bookRoute.PATCH("/:id", controllers.UpdateBook)  // Update an existing book
 	bookRoute.DELETE("/:id", controllers.DeleteBook) // Delete a book
 
+	// Di dalam fungsi SetupRouter
+
+	// Routing Mahasiswa
+	r.GET("/mahasiswa", controllers.GetAllMahasiswa)
+	r.POST("/mahasiswa", controllers.CreateMahasiswa)
+	r.GET("/mahasiswa/:id", controllers.GetMahasiswaByID)
+	r.PUT("/mahasiswa/:id", controllers.UpdateMahasiswa)
+	r.DELETE("/mahasiswa/:id", controllers.DeleteMahasiswa)
+
+	// Routing Dosen
+	r.GET("/dosen", controllers.GetAllDosen)
+	r.POST("/dosen", controllers.CreateDosen)
+	r.GET("/dosen/:id", controllers.GetDosenByID)
+	r.PUT("/dosen/:id", controllers.UpdateDosen)
+	r.DELETE("/dosen/:id", controllers.DeleteDosen)
+
+	// Routing Mata Kuliah
+	r.GET("/mata-kuliah", controllers.GetAllMataKuliah)
+	r.POST("/mata-kuliah", controllers.CreateMataKuliah)
+	r.GET("/mata-kuliah/:id", controllers.GetMataKuliahByID)
+	r.PUT("/mata-kuliah/:id", controllers.UpdateMataKuliah)
+	r.DELETE("/mata-kuliah/:id", controllers.DeleteMataKuliah)
+
+	// Routing Jadwal Kuliah
+	r.GET("/jadwal-kuliah", controllers.GetAllJadwalKuliah)
+	r.POST("/jadwal-kuliah", controllers.CreateJadwalKuliah)
+	r.GET("/jadwal-kuliah/:id", controllers.GetJadwalKuliahByID)
+	r.PUT("/jadwal-kuliah/:id", controllers.UpdateJadwalKuliah)
+	r.DELETE("/jadwal-kuliah/:id", controllers.DeleteJadwalKuliah)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }

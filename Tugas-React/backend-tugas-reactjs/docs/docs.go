@@ -431,6 +431,168 @@ const docTemplate = `{
                 }
             }
         },
+        "/dosen": {
+            "get": {
+                "description": "Get list of all Dosen",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dosen"
+                ],
+                "summary": "Get all Dosen",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Dosen"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Dosen",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dosen"
+                ],
+                "summary": "Create new Dosen",
+                "parameters": [
+                    {
+                        "description": "Dosen",
+                        "name": "dosen",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Dosen"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Dosen"
+                        }
+                    }
+                }
+            }
+        },
+        "/dosen/{id}": {
+            "get": {
+                "description": "Get a Dosen by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dosen"
+                ],
+                "summary": "Get Dosen by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dosen ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Dosen"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing Dosen",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dosen"
+                ],
+                "summary": "Update a Dosen",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dosen ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Dosen",
+                        "name": "dosen",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Dosen"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Dosen"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Dosen by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dosen"
+                ],
+                "summary": "Delete a Dosen",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Dosen ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/footballers": {
             "get": {
                 "produces": [
@@ -609,6 +771,168 @@ const docTemplate = `{
                 }
             }
         },
+        "/jadwal-kuliah": {
+            "get": {
+                "description": "Get list of all Jadwal Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "JadwalKuliah"
+                ],
+                "summary": "Get all Jadwal Kuliah",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.JadwalKuliah"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Jadwal Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "JadwalKuliah"
+                ],
+                "summary": "Create new Jadwal Kuliah",
+                "parameters": [
+                    {
+                        "description": "Jadwal Kuliah",
+                        "name": "jadwal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.JadwalKuliah"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.JadwalKuliah"
+                        }
+                    }
+                }
+            }
+        },
+        "/jadwal-kuliah/{id}": {
+            "get": {
+                "description": "Get a Jadwal Kuliah by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "JadwalKuliah"
+                ],
+                "summary": "Get Jadwal Kuliah by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Jadwal Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.JadwalKuliah"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing Jadwal Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "JadwalKuliah"
+                ],
+                "summary": "Update a Jadwal Kuliah",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Jadwal Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Jadwal Kuliah",
+                        "name": "jadwal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.JadwalKuliah"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.JadwalKuliah"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Jadwal Kuliah by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "JadwalKuliah"
+                ],
+                "summary": "Delete a Jadwal Kuliah",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Jadwal Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Logging in to get jwt token to access admin or user api by roles.",
@@ -636,6 +960,330 @@ const docTemplate = `{
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/mahasiswa": {
+            "get": {
+                "description": "Get list of all Mahasiswa",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mahasiswa"
+                ],
+                "summary": "Get all Mahasiswa",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Mahasiswa"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Mahasiswa",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mahasiswa"
+                ],
+                "summary": "Create new Mahasiswa",
+                "parameters": [
+                    {
+                        "description": "Mahasiswa",
+                        "name": "mahasiswa",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Mahasiswa"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mahasiswa"
+                        }
+                    }
+                }
+            }
+        },
+        "/mahasiswa/{id}": {
+            "get": {
+                "description": "Get a Mahasiswa by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mahasiswa"
+                ],
+                "summary": "Get Mahasiswa by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mahasiswa ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mahasiswa"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing Mahasiswa",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mahasiswa"
+                ],
+                "summary": "Update a Mahasiswa",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mahasiswa ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Mahasiswa",
+                        "name": "mahasiswa",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Mahasiswa"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mahasiswa"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Mahasiswa by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mahasiswa"
+                ],
+                "summary": "Delete a Mahasiswa",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mahasiswa ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/mata-kuliah": {
+            "get": {
+                "description": "Get list of all Mata Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MataKuliah"
+                ],
+                "summary": "Get all Mata Kuliah",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.MataKuliah"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Mata Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MataKuliah"
+                ],
+                "summary": "Create new Mata Kuliah",
+                "parameters": [
+                    {
+                        "description": "Mata Kuliah",
+                        "name": "mataKuliah",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.MataKuliah"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MataKuliah"
+                        }
+                    }
+                }
+            }
+        },
+        "/mata-kuliah/{id}": {
+            "get": {
+                "description": "Get a Mata Kuliah by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MataKuliah"
+                ],
+                "summary": "Get Mata Kuliah by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mata Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MataKuliah"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing Mata Kuliah",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MataKuliah"
+                ],
+                "summary": "Update a Mata Kuliah",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mata Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Mata Kuliah",
+                        "name": "mataKuliah",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.MataKuliah"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.MataKuliah"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Mata Kuliah by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "MataKuliah"
+                ],
+                "summary": "Delete a Mata Kuliah",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mata Kuliah ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
                         }
                     }
                 }
@@ -1024,6 +1672,32 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Dosen": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "jadwals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.JadwalKuliah"
+                    }
+                },
+                "mataKuliah": {
+                    "type": "string"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Footballer": {
             "type": "object",
             "properties": {
@@ -1043,6 +1717,90 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.JadwalKuliah": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "dosen": {
+                    "$ref": "#/definitions/models.Dosen"
+                },
+                "dosenID": {
+                    "type": "integer"
+                },
+                "hari": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "jamMulai": {
+                    "type": "string"
+                },
+                "jamSelesai": {
+                    "type": "string"
+                },
+                "mahasiswa": {
+                    "$ref": "#/definitions/models.Mahasiswa"
+                },
+                "mahasiswaID": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Mahasiswa": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "jadwals": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.JadwalKuliah"
+                    }
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MataKuliah": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "dosens": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Dosen"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nama": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }
