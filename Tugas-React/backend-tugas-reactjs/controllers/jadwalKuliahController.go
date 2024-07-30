@@ -2,11 +2,26 @@ package controllers
 
 import (
 	"backend-tugas-reactjs/models"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
+
+func parseTime(input string) (time.Time, error) {
+	// Tentukan tanggal default untuk digunakan bersama waktu
+	defaultDate := "2000-01-01"
+	layout := "2006-01-02T15:04"
+	completeInput := fmt.Sprintf("%sT%s", defaultDate, input)
+
+	parsedTime, err := time.Parse(layout, completeInput)
+	if err != nil {
+		return time.Time{}, fmt.Errorf("parsing time error: %w", err)
+	}
+	return parsedTime, nil
+}
 
 // GetAllJadwalKuliah godoc
 // @Summary Get all Jadwal Kuliah
@@ -16,11 +31,18 @@ import (
 // @Produce  json
 // @Success 200 {array} models.JadwalKuliah
 // @Router /jadwal-kuliah [get]
+// Function to get all schedule including Dosen and their MataKuliah
 func GetAllJadwalKuliah(c *gin.Context) {
-	var jadwals []models.JadwalKuliah
 	db := c.MustGet("db").(*gorm.DB)
-	db.Preload("Dosen").Preload("Mahasiswa").Find(&jadwals)
-	c.JSON(http.StatusOK, gin.H{"data": jadwals})
+	var schedules []models.JadwalKuliah
+
+	// Preload Dosen dan Mahasiswa beserta MataKuliah yang terkait
+	if err := db.Preload("Dosen.MataKuliah").Preload("Mahasiswa").Find(&schedules).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": schedules})
 }
 
 // CreateJadwalKuliah godoc
@@ -33,14 +55,42 @@ func GetAllJadwalKuliah(c *gin.Context) {
 // @Success 200 {object} models.JadwalKuliah
 // @Router /jadwal-kuliah [post]
 func CreateJadwalKuliah(c *gin.Context) {
-	var input models.JadwalKuliah
+	var input struct {
+		models.JadwalKuliah
+		JamMulai   string `json:"jamMulai"`
+		JamSelesai string `json:"jamSelesai"`
+	}
+
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// Parse JamMulai and JamSelesai
+	startTime, err := parseTime(input.JamMulai)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start time format"})
+		return
+	}
+
+	endTime, err := parseTime(input.JamSelesai)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end time format"})
+		return
+	}
+
+	// Set parsed times in input.JadwalKuliah
+	input.JadwalKuliah.JamMulai = startTime
+	input.JadwalKuliah.JamSelesai = endTime
+
 	db := c.MustGet("db").(*gorm.DB)
-	db.Create(&input)
-	c.JSON(http.StatusOK, gin.H{"data": input})
+	result := db.Create(&input.JadwalKuliah)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": input.JadwalKuliah})
 }
 
 // GetJadwalKuliahByID godoc

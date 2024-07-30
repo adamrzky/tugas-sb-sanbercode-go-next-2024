@@ -16,10 +16,17 @@ import (
 // @Produce  json
 // @Success 200 {array} models.Dosen
 // @Router /dosen [get]
+// GetAllDosen mengembalikan semua dosen dan mata kuliah terkait
 func GetAllDosen(c *gin.Context) {
-	var dosens []models.Dosen
 	db := c.MustGet("db").(*gorm.DB)
-	db.Find(&dosens)
+	var dosens []models.Dosen
+
+	// Preload MataKuliah untuk setiap Dosen
+	if err := db.Preload("MataKuliah").Find(&dosens).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"data": dosens})
 }
 
