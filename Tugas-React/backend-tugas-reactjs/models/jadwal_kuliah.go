@@ -6,11 +6,11 @@ import (
 
 type JadwalKuliah struct {
 	ID          uint `gorm:"primarykey"`
-	Hari        string
-	JamMulai    time.Time
-	JamSelesai  time.Time
 	DosenID     uint
 	MahasiswaID uint
+	Hari        string
+	JamMulai    string // Simpan sebagai 'HH:mm'
+	JamSelesai  string // Simpan sebagai 'HH:mm'
 	Dosen       Dosen
 	Mahasiswa   Mahasiswa
 	CreatedAt   time.Time

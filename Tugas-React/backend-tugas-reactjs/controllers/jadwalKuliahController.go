@@ -55,42 +55,47 @@ func GetAllJadwalKuliah(c *gin.Context) {
 // @Success 200 {object} models.JadwalKuliah
 // @Router /jadwal-kuliah [post]
 func CreateJadwalKuliah(c *gin.Context) {
-	var input struct {
-		models.JadwalKuliah
-		JamMulai   string `json:"jamMulai"`
-		JamSelesai string `json:"jamSelesai"`
-	}
-
+	var input models.JadwalKuliah
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Parse JamMulai and JamSelesai
-	startTime, err := parseTime(input.JamMulai)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start time format"})
+	// Validasi hari valid
+	validDays := map[string]bool{"Senin": true, "Selasa": true, "Rabu": true, "Kamis": true, "Jumat": true}
+	if _, valid := validDays[input.Hari]; !valid {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Hari harus antara Senin dan Jumat"})
 		return
 	}
 
-	endTime, err := parseTime(input.JamSelesai)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end time format"})
+	// Validasi jam
+	startTime, errStart := time.Parse("15:04", input.JamMulai)
+	endTime, errEnd := time.Parse("15:04", input.JamSelesai)
+	if errStart != nil || errEnd != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Format jam salah, harus HH:mm"})
+		return
+	}
+	if !endTime.After(startTime) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Jam selesai harus lebih besar dari jam mulai"})
 		return
 	}
 
-	// Set parsed times in input.JadwalKuliah
-	input.JadwalKuliah.JamMulai = startTime
-	input.JadwalKuliah.JamSelesai = endTime
-
+	// Cek duplikasi entri
+	var existingCount int64
 	db := c.MustGet("db").(*gorm.DB)
-	result := db.Create(&input.JadwalKuliah)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+	db.Model(&models.JadwalKuliah{}).Where("dosen_id = ? AND mahasiswa_id = ? AND hari = ?", input.DosenID, input.MahasiswaID, input.Hari).Count(&existingCount)
+	if existingCount > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dosen dan Mahasiswa sudah memiliki jadwal pada hari yang sama"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": input.JadwalKuliah})
+	// Simpan ke database
+	if err := db.Create(&input).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": input})
 }
 
 // GetJadwalKuliahByID godoc

@@ -75,15 +75,16 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = await getJadwalKuliah();
-      if (response.status === 200) {
+      if (response && response.status === 200) {
         setJadwalKuliah(response.data || []);
       } else {
-        console.error("Failed to fetch data:", response.status, response.statusText);
-        Swal.fire("Error!", `Failed to fetch data: ${response.statusText}`, "error");
+        const errorMessage = response ? `Failed to fetch data: ${response.statusText}` : "Failed to fetch data: No response from the server";
+        console.error("Failed to fetch data:", response ? response.status : "No status", response ? response.statusText : "No status text");
+        Swal.fire("Error!", errorMessage, "error");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      Swal.fire("Error!", `Exception while fetching data: ${error.message}`, "error");
+      Swal.fire("Error!", `Exception while fetching data: ${error.toString()}`, "error");
     }
   };
 
