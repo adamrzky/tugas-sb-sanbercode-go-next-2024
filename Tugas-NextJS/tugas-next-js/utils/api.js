@@ -21,16 +21,29 @@ export const getMahasiswa = async () => {
 };
 
 export const createJadwalKuliah = async (data) => {
-  const response = await api.post('/jadwal-kuliah', data);
-  return response.data;
+  try {
+    const response = await api.post('/jadwal-kuliah', data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error || 'Unknown error occurred');
+  }
 };
 
 export const updateJadwalKuliah = async (id, data) => {
-  const response = await api.put(`/jadwal-kuliah/${id}`, data);
-  return response.data;
+  try {
+    const response = await api.put(`/jadwal-kuliah/${id}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error || "Unknown error occurred");
+  }
 };
 
+
 export const deleteJadwalKuliah = async (id) => {
-  const response = await api.delete(`/jadwal-kuliah/${id}`);
-  return response.data;
+  try {
+    const response = await api.delete(`/jadwal-kuliah/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error || "Unknown error occurred");
+  }
 };

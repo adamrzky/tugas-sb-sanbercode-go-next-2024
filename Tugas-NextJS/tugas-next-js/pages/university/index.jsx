@@ -1,7 +1,16 @@
 // pages/university/index.jsx
-import { useState } from 'react';
-import Navbar from '../../components/Navbar';
-import { getJadwalKuliah, getDosen, getMahasiswa, createJadwalKuliah, deleteJadwalKuliah } from '../../utils/api';
+import { useState,useEffect  } from "react";
+import Navbar from "../../components/Navbar";
+import Swal from "sweetalert2";
+
+import {
+  getJadwalKuliah,
+  getDosen,
+  getMahasiswa,
+  createJadwalKuliah,
+  deleteJadwalKuliah,
+  updateJadwalKuliah,
+} from "../../utils/api";
 
 export async function getServerSideProps() {
   try {
@@ -17,7 +26,7 @@ export async function getServerSideProps() {
       },
     };
   } catch (error) {
-    console.error('Error in getServerSideProps:', error);
+    console.error("Error in getServerSideProps:", error);
     return {
       props: {
         jadwalKuliah: [],
@@ -28,70 +37,183 @@ export async function getServerSideProps() {
   }
 }
 
-const Home = ({ jadwalKuliah, dosen, mahasiswa }) => {
+const Home = () => {
+  const [jadwalKuliah, setJadwalKuliah] = useState([]);
+  const [dosen, setDosen] = useState([]);
+  const [mahasiswa, setMahasiswa] = useState([]);
   const [form, setForm] = useState({
-    dosenId: '',
-    mahasiswaId: '',
-    hari: '',
-    jamMulai: '',
-    jamSelesai: '',
+    dosenId: "",
+    mahasiswaId: "",
+    hari: "",
+    jamMulai: "",
+    jamSelesai: "",
   });
+  const [editMode, setEditMode] = useState(false);
+  const [editId, setEditId] = useState(null);
 
+  // Mengambil data saat komponen dimuat
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [jadwalData, dosenData, mahasiswaData] = await Promise.all([
+          getJadwalKuliah(),
+          getDosen(),
+          getMahasiswa(),
+        ]);
+        setJadwalKuliah(jadwalData.data);
+        setDosen(dosenData.data);
+        setMahasiswa(mahasiswaData.data);
+      } catch (error) {
+        Swal.fire("Error!", "Gagal memuat data.", "error");
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  const fetchData = async () => {
+    try {
+      const response = await getJadwalKuliah();
+      if (response.status === 200) {
+        setJadwalKuliah(response.data || []);
+      } else {
+        console.error("Failed to fetch data:", response.status, response.statusText);
+        Swal.fire("Error!", `Failed to fetch data: ${response.statusText}`, "error");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      Swal.fire("Error!", `Exception while fetching data: ${error.message}`, "error");
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Konversi DosenID dan MahasiswaID dari string ke integer
+  
     const dosenId = parseInt(form.dosenId, 10);
     const mahasiswaId = parseInt(form.mahasiswaId, 10);
-
-    // Parsing waktu untuk memastikan validasi waktu lebih akurat
+  
     const startTime = new Date(`1970-01-01T${form.jamMulai}:00Z`);
     const endTime = new Date(`1970-01-01T${form.jamSelesai}:00Z`);
-
-    // Validasi waktu selesai harus lebih besar dari waktu mulai
+  
     if (endTime <= startTime) {
-      alert('Jam selesai harus lebih besar dari jam mulai!');
+      Swal.fire({
+        title: "Error!",
+        text: "Jam selesai harus lebih besar dari jam mulai!",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
       return;
     }
-
-    // Validasi waktu mulai dan selesai tidak boleh sama
+  
     if (form.jamMulai === form.jamSelesai) {
-      alert('Jam mulai dan jam selesai tidak boleh sama!');
+      Swal.fire({
+        title: "Error!",
+        text: "Jam mulai dan jam selesai tidak boleh sama!",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
       return;
     }
-
-    // Cek entri yang ada untuk menghindari jadwal bentrok
-    const existingEntry = jadwalKuliah.find(jk => jk.dosenId === dosenId && jk.mahasiswaId === mahasiswaId && jk.hari === form.hari);
+  
+    const existingEntry = jadwalKuliah.find(
+      (jk) => jk.dosenId === dosenId &&
+              jk.mahasiswaId === mahasiswaId &&
+              jk.hari === form.hari &&
+              jk.ID !== editId
+    );
+  
     if (existingEntry) {
-      alert('Dosen dan Mahasiswa sudah memiliki jadwal pada hari yang sama!');
+      Swal.fire({
+        title: "Error!",
+        text: "Dosen dan Mahasiswa sudah memiliki jadwal pada hari yang sama!",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
       return;
     }
-
-    // Data yang akan dikirim ke backend, memastikan kunci yang dikirim sesuai
+  
     const submitData = {
-        ...form,
-        dosenId,      // Pastikan nama kunci sesuai dengan yang di backend
-        mahasiswaId  // Pastikan nama kunci sesuai dengan yang di backend
+      ...form,
+      dosenId,
+      mahasiswaId,
     };
-
-    try {
-      const result = await createJadwalKuliah(submitData);
-      alert('Jadwal Kuliah berhasil ditambahkan!');
-      // Opsional: muat ulang data di sini jika diperlukan, misalnya dengan memanggil fungsi untuk memuat jadwal kuliah lagi
-    } catch (error) {
-      alert('Error: ' + error.message);
+  
+    if (editMode) {
+      try {
+        await updateJadwalKuliah(editId, submitData);
+        Swal.fire("Updated!", "Jadwal Kuliah berhasil diperbarui.", "success");
+        setEditMode(false);
+        setEditId(null);
+        await fetchData();  
+      } catch (error) {
+        Swal.fire("Error!", error.message, "error");
+      }
+    } else {
+      try {
+        await createJadwalKuliah(submitData);
+        Swal.fire({
+          title: "Berhasil!",
+          text: "Jadwal Kuliah berhasil ditambahkan!",
+          icon: "success",
+          confirmButtonText: "Ok",
+        });
+        await fetchData();  
+      } catch (error) {
+        Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      }
     }
-};
+  };
+  
+
+  const handleDelete = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteJadwalKuliah(id);
+          Swal.fire("Deleted!", "Your file has been deleted.", "success");
+          // Optionally refresh the list here
+        } catch (error) {
+          Swal.fire("Failed!", error.message, "error");
+        }
+      }
+    });
+  };
+
+  const handleEdit = (jadwal) => {
+    setForm({
+      dosenId: jadwal.DosenID.toString(),
+      mahasiswaId: jadwal.MahasiswaID.toString(),
+      hari: jadwal.Hari,
+      jamMulai: formatTimeForInput(jadwal.JamMulai),
+      jamSelesai: formatTimeForInput(jadwal.JamSelesai),
+    });
+    setEditId(jadwal.ID);
+    setEditMode(true);
+  };
+
+  const formatTimeForInput = (timeString) => {
+    return timeString ? timeString.slice(0, 5) : '--:--'; // Slices the string to only show HH:mm
+  };
+  
 
 
   return (
@@ -102,25 +224,44 @@ const Home = ({ jadwalKuliah, dosen, mahasiswa }) => {
         <form onSubmit={handleSubmit} className="mt-4">
           <div className="mb-4">
             <label className="block text-gray-700">Dosen</label>
-             <select name="dosenId" value={form.dosenId} onChange={handleInputChange} className="mt-1 block w-full">
+            <select
+              name="dosenId"
+              value={form.dosenId}
+              onChange={handleInputChange}
+              className="mt-1 block w-full"
+            >
               <option value="">Pilih Dosen</option>
               {dosen.map((item) => (
-                <option key={item.ID} value={item.ID}>{item.Nama} - {item.MataKuliah.Nama}</option>
+                <option key={item.ID} value={item.ID}>
+                  {item.Nama} - {item.MataKuliah.Nama}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Mahasiswa</label>
-            <select name="mahasiswaId" value={form.mahasiswaId} onChange={handleInputChange} className="mt-1 block w-full">
+            <select
+              name="mahasiswaId"
+              value={form.mahasiswaId}
+              onChange={handleInputChange}
+              className="mt-1 block w-full"
+            >
               <option value="">Pilih Mahasiswa</option>
               {mahasiswa.map((item) => (
-                <option key={item.ID} value={item.ID}>{item.Nama}</option>
+                <option key={item.ID} value={item.ID}>
+                  {item.Nama}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
             <label className="block text-gray-700">Hari</label>
-            <select name="hari" value={form.hari} onChange={handleInputChange} className="mt-1 block w-full">
+            <select
+              name="hari"
+              value={form.hari}
+              onChange={handleInputChange}
+              className="mt-1 block w-full"
+            >
               <option value="">Pilih Hari</option>
               <option value="Senin">Senin</option>
               <option value="Selasa">Selasa</option>
@@ -129,39 +270,63 @@ const Home = ({ jadwalKuliah, dosen, mahasiswa }) => {
               <option value="Jumat">Jumat</option>
             </select>
           </div>
+          {/* Jam Mulai */}
           <div className="mb-4">
-            <label className="block text_gray-700">Jam Mulai</label>
-            <input type="time" name="jamMulai" value={form.jamMulai} onChange={handleInputChange} className="mt-1 block w-full" />
+            <label className="block text-gray-700">Jam Mulai</label>
+            <input
+              type="time"
+              name="jamMulai"
+              value={form.jamMulai}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm"
+            />
           </div>
+          {/* Jam Selesai */}
           <div className="mb-4">
             <label className="block text_gray-700">Jam Selesai</label>
-            <input type="time" name="jamSelesai" value={form.jamSelesai} onChange={handleInputChange} className="mt-1 block w-full" />
+            <input
+              type="time"
+              name="jamSelesai"
+              value={form.jamSelesai}
+              onChange={handleInputChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded shadow-sm"
+            />
           </div>
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Tambah Jadwal</button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Tambah Jadwal
+          </button>
         </form>
 
-        <div className="container mx-auto mt-8">
-        <h1 className="text-2xl font-bold">Jadwal Kuliah</h1>
-        <table className="min-w-full bg-white mt-4">
+        <div className="mt-8">
+        <h2 className="text-xl font-bold">Daftar Jadwal Kuliah</h2>
+        <table className="min-w-full bg-white">
           <thead>
-            <tr>
-              <th className="border px-4 py-2">Dosen</th>
-              <th className="border px-4 py-2">Mata Kuliah</th>
-              <th className="border px-4 py-2">Mahasiswa</th>
-              <th className="border px-4 py-2">Hari</th>
-              <th className="border px-4 py-2">Jam Mulai</th>
-              <th className="border px-4 py-2">Jam Selesai</th>
+            <tr className="bg-gray-100">
+              <th className="py-2">Dosen</th>
+              <th className="py-2">Mata Kuliah</th>
+              <th className="py-2">Mahasiswa</th>
+              <th className="py-2">Hari</th>
+              <th className="py-2">Jam Mulai</th>
+              <th className="py-2">Jam Selesai</th>
+              <th className="py-2">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {jadwalKuliah.map((jk) => (
               <tr key={jk.ID}>
                 <td className="border px-4 py-2">{jk.Dosen.Nama}</td>
-                <td className="border px-4 py-2">{jk.Dosen.MataKuliah && jk.Dosen.MataKuliah.Nama ? jk.Dosen.MataKuliah.Nama : "Mata Kuliah tidak tersedia"}</td>
+                <td className="border px-4 py-2">{jk.Dosen.MataKuliah ? jk.Dosen.MataKuliah.Nama : 'Mata Kuliah tidak tersedia'}</td>
                 <td className="border px-4 py-2">{jk.Mahasiswa.Nama}</td>
                 <td className="border px-4 py-2">{jk.Hari}</td>
-                <td className="border px-4 py-2">{jk.JamMulai}</td>
-                <td className="border px-4 py-2">{jk.JamSelesai}</td>
+                <td className="border px-4 py-2">{formatTimeForInput(jk.JamMulai)}</td>
+                <td className="border px-4 py-2">{formatTimeForInput(jk.JamSelesai)}</td>
+                <td className="border px-4 py-2">
+                  <button onClick={() => handleEdit(jk)} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Edit</button>
+                  <button onClick={() => handleDelete(jk.ID)} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                </td>
               </tr>
             ))}
           </tbody>
