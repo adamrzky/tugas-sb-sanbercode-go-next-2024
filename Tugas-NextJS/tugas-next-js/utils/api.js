@@ -47,3 +47,5 @@ export const deleteJadwalKuliah = async (id) => {
     throw new Error(error.response.data.error || "Unknown error occurred");
   }
 };
+
+

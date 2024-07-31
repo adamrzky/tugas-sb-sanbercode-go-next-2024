@@ -13,10 +13,13 @@ const Navbar = () => {
             <span className="text-gray-300 hover:text-white cursor-pointer">Home</span>
           </Link>
           <Link href="/university/about">
-            <span className="text-gray-300 hover:text-white cursor-pointer">About</span>
+            <span className="text-gray-300 hover:text-white cursor-pointer">Mahasiswa</span>
           </Link>
-          <Link href="/university/contact">
-            <span className="text-gray-300 hover:text-white cursor-pointer">Contact</span>
+          <Link href="/university/mata-kuliah">
+            <span className="text-gray-300 hover:text-white cursor-pointer">Mata Kuliah</span>
+          </Link>
+          <Link href="/university/dosen">
+            <span className="text-gray-300 hover:text-white cursor-pointer">Dosen</span>
           </Link>
         </div>
       </div>
