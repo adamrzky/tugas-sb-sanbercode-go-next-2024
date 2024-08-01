@@ -151,7 +151,7 @@ const Home = () => {
         Swal.fire("Updated!", "Jadwal Kuliah berhasil diperbarui.", "success");
         setEditMode(false);
         setEditId(null);
-        await fetchData();  
+        // await fetchData();  
       } catch (error) {
         Swal.fire("Error!", error.message, "error");
       }
@@ -164,7 +164,7 @@ const Home = () => {
           icon: "success",
           confirmButtonText: "Ok",
         });
-        await fetchData();  
+        // await fetchData();  
       } catch (error) {
         Swal.fire({
           title: "Error!",

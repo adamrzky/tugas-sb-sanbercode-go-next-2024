@@ -12,7 +12,7 @@ const Navbar = () => {
           <Link href="/university">
             <span className="text-gray-300 hover:text-white cursor-pointer">Home</span>
           </Link>
-          <Link href="/university/about">
+          <Link href="/mahasiswa">
             <span className="text-gray-300 hover:text-white cursor-pointer">Mahasiswa</span>
           </Link>
           <Link href="/university/mata-kuliah">
