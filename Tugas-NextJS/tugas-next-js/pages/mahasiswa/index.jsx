@@ -1,101 +1,102 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Swal from "sweetalert2";
 import {
-    getMahasiswa,
+  getMahasiswa,
   createMahasiswa,
   updateMahasiswa,
   deleteMahasiswa,
 } from "../../utils/api";
 
 export async function getServerSideProps() {
-    try {
-      const response = await getMahasiswa(); // Sesuaikan ini dengan fungsi yang benar untuk mengambil data mahasiswa
-      if (response.status === 200) {
-        return {
-          props: {
-            mahasiswa: response.data.data || [], // Pastikan ini adalah array
-          },
-        };
-      } else {
-        console.error("Failed to fetch data:", response.status, response.statusText);
-        return {
-          props: {
-            mahasiswa: [],
-          },
-        };
-      }
-    } catch (error) {
-      console.error("Error in getServerSideProps:", error);
+  try {
+    const response = await getMahasiswa();
+    if (response.status = 200) {
       return {
         props: {
-          mahasiswa: [],
+          data: response.data || [], // Pastikan ini adalah array
+        },
+      };
+    } else {
+      console.error("Failed to fetch data:", response.status, response.statusText);
+      return {
+        props: {
+          data: [],
         },
       };
     }
+  } catch (error) {
+    console.error("Error in getServerSideProps:", error);
+    return {
+      props: {
+        data: [],
+      },
+    };
   }
-  
-  
+}
 
-const MahasiswaPage = ({ mahasiswa }) => {
-  const [mahasiswaList, setMahasiswaList] = useState(mahasiswa);
+const MahasiswaPage = ({ data }) => {
+  const [mahasiswa, setMahasiswa] = useState(data);
   const [form, setForm] = useState({
     id: null,
     nama: "",
-    nim: "",
-    jurusan: "",
   });
   const [editMode, setEditMode] = useState(false);
 
+  useEffect(() => {
+    fetchMahasiswa(); // Memuat ulang data setelah update
+  }, []);
+
+  const fetchMahasiswa = async () => {
+    const response = await getMahasiswa();
+    if (response.status = 200) {
+      setMahasiswa(response.data);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const payload = { nama: form.nama, nim: form.nim, jurusan: form.jurusan };
+    const payload = { nama: form.nama };
 
-    try {
-      let response;
-      if (editMode) {
-        response = await updateMahasiswa(form.id, payload);
+    if (editMode && form.id) {
+      try {
+        await updateMahasiswa(form.id, payload);
+        Swal.fire("Sukses", "Data mahasiswa berhasil diperbarui!", "success");
         setEditMode(false);
-      } else {
-        response = await createMahasiswa(payload);
+        fetchMahasiswa();
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
       }
-      if (response.status === 200) {
-        setForm({ id: null, nama: "", nim: "", jurusan: "" });
-        setMahasiswaList([...mahasiswaList, response.data]); // update list
-        Swal.fire("Success", "Mahasiswa updated successfully!", "success");
-      } else {
-        Swal.fire("Error", response.statusText, "error");
+    } else {
+      try {
+        await createMahasiswa(payload);
+        Swal.fire("Sukses", "Mahasiswa berhasil ditambahkan!", "success");
+        fetchMahasiswa();
+      } catch (error) {
+        Swal.fire("Error", error.message, "error");
       }
-    } catch (error) {
-      Swal.fire("Error", error.message, "error");
     }
+    setForm({ id: null, nama: "" }); // Reset form
   };
 
   const handleEdit = (mahasiswa) => {
     setForm({
-      id: mahasiswa.id,
-      nama: mahasiswa.nama,
-      nim: mahasiswa.nim,
-      jurusan: mahasiswa.jurusan,
+      id: mahasiswa.ID,
+      nama: mahasiswa.Nama,
     });
     setEditMode(true);
   };
 
   const handleDelete = async (id) => {
     try {
-      const response = await deleteMahasiswa(id);
-      if (response.status === 200) {
-        const newList = mahasiswaList.filter((m) => m.id !== id);
-        setMahasiswaList(newList);
-        Swal.fire("Deleted!", "Mahasiswa has been deleted.", "success");
-      } else {
-        Swal.fire("Error", response.statusText, "error");
-      }
+      await deleteMahasiswa(id);
+      Swal.fire("Deleted!", "Mahasiswa has been deleted.", "success");
+      fetchMahasiswa();
     } catch (error) {
       Swal.fire("Error", error.message, "error");
     }
@@ -105,56 +106,57 @@ const MahasiswaPage = ({ mahasiswa }) => {
     <>
       <Navbar />
       <div className="container mx-auto mt-8">
-        <h1 className="text-2xl font-bold">Kelola Mahasiswa</h1>
-        <form onSubmit={handleSubmit} className="mt-4">
-          <input
-            type="text"
-            name="nama"
-            placeholder="Nama Mahasiswa"
-            value={form.nama}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="nim"
-            placeholder="NIM Mahasiswa"
-            value={form.nim}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            type="text"
-            name="jurusan"
-            placeholder="Jurusan"
-            value={form.jurusan}
-            onChange={handleInputChange}
-            required
-          />
-          <button type="submit" className="btn-primary">
-            {editMode ? "Update" : "Add"}
-          </button>
-        </form>
-        <div>
-          <h2 className="text-xl font-bold">Daftar Mahasiswa</h2>
-          <table>
-            <thead>
+        <h1 className="text-2xl font-bold mb-4">Kelola Mahasiswa</h1>
+        <div className="mb-8">
+          <form onSubmit={handleSubmit} className="flex gap-3 mb-4">
+            <input
+              type="text"
+              name="nama"
+              placeholder="Nama Mahasiswa"
+              value={form.nama}
+              onChange={handleInputChange}
+              required
+              className="p-2 border border-gray-300 rounded shadow-sm"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              {editMode ? "Perbarui" : "Tambah"}
+            </button>
+          </form>
+        </div>
+        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <th>Nama</th>
-                <th>NIM</th>
-                <th>Jurusan</th>
-                <th>Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nama
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Aksi
+                </th>
               </tr>
             </thead>
-            <tbody>
-              {mahasiswaList.map((m) => (
-                <tr key={m.id}>
-                  <td>{m.nama}</td>
-                  <td>{m.nim}</td>
-                  <td>{m.jurusan}</td>
-                  <td>
-                    <button onClick={() => handleEdit(m)}>Edit</button>
-                    <button onClick={() => handleDelete(m.id)}>Delete</button>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {mahasiswa.map((m) => (
+                <tr key={m.ID}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {m.Nama}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button
+                      onClick={() => handleEdit(m)}
+                      className="text-indigo-600 hover:text-indigo-900 px-3 py-1 rounded"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(m.ID)}
+                      className="text-red-600 hover:text-red-900 px-3 py-1 rounded"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}

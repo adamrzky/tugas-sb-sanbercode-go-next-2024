@@ -51,7 +51,6 @@ const Home = () => {
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  // Mengambil data saat komponen dimuat
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,7 +74,8 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = await getJadwalKuliah();
-      if (response && response.status === 200) {
+      console.log(response)
+      if (response == 200) {
         setJadwalKuliah(response.data || []);
       } else {
         const errorMessage = response ? `Failed to fetch data: ${response.statusText}` : "Failed to fetch data: No response from the server";
@@ -151,7 +151,7 @@ const Home = () => {
         Swal.fire("Updated!", "Jadwal Kuliah berhasil diperbarui.", "success");
         setEditMode(false);
         setEditId(null);
-        // await fetchData();  
+        await fetchData();  
       } catch (error) {
         Swal.fire("Error!", error.message, "error");
       }
@@ -164,7 +164,7 @@ const Home = () => {
           icon: "success",
           confirmButtonText: "Ok",
         });
-        // await fetchData();  
+        await fetchData();  
       } catch (error) {
         Swal.fire({
           title: "Error!",

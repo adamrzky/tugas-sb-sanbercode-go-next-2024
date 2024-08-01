@@ -5,9 +5,9 @@ import (
 )
 
 type Mahasiswa struct {
-	ID        uint `gorm:"primarykey"`
-	Nama      string
-	Email     string `gorm:"uniqueIndex"`
+	ID   uint `gorm:"primarykey"`
+	Nama string
+	// Email     string `gorm:"uniqueIndex"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Jadwals   []JadwalKuliah `gorm:"foreignKey:MahasiswaID"`
