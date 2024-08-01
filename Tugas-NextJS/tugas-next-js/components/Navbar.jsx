@@ -15,10 +15,10 @@ const Navbar = () => {
           <Link href="/mahasiswa">
             <span className="text-gray-300 hover:text-white cursor-pointer">Mahasiswa</span>
           </Link>
-          <Link href="/university/mata-kuliah">
+          <Link href="/matakuliah">
             <span className="text-gray-300 hover:text-white cursor-pointer">Mata Kuliah</span>
           </Link>
-          <Link href="/university/dosen">
+          <Link href="/dosen">
             <span className="text-gray-300 hover:text-white cursor-pointer">Dosen</span>
           </Link>
         </div>

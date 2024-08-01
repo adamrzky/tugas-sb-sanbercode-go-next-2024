@@ -66,3 +66,102 @@ export const deleteMahasiswa = async (id) => {
   const response = await api.delete(`/mahasiswa/${id}`);
   return response.data;
 };
+
+
+export const getMataKuliah = async () => {
+  const response = await api.get("/mata-kuliah");
+  return response.data;
+};
+
+
+
+// Fungsi untuk menambahkan Mata Kuliah baru
+export async function createMataKuliah(data) {
+  console.log(data)
+  try {
+    const response = await fetch(`${API_URL}/mata-kuliah`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    console.log(response)
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to create mata kuliah:", error);
+  }
+}
+
+// Fungsi untuk memperbarui Mata Kuliah
+export async function updateMataKuliah(id, data) {
+  try {
+    const response = await fetch(`${API_URL}/mata-kuliah/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to update mata kuliah:", error);
+  }
+}
+
+// Fungsi untuk menghapus Mata Kuliah
+export async function deleteMataKuliah(id) {
+  try {
+    const response = await fetch(`${API_URL}/mata-kuliah/${id}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to delete mata kuliah:", error);
+  }
+}
+
+
+// Fungsi untuk menambahkan Dosen baru
+export async function createDosen(data) {
+  try {
+    const response = await fetch(`${API_URL}/dosen`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to create dosen:", error);
+  }
+}
+
+// Fungsi untuk memperbarui Dosen
+export async function updateDosen(id, data) {
+  try {
+    const response = await fetch(`${API_URL}/dosen/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to update dosen:", error);
+  }
+}
+
+// Fungsi untuk menghapus Dosen
+export async function deleteDosen(id) {
+  try {
+    const response = await fetch(`${API_URL}/dosen/${id}`, {
+      method: 'DELETE'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to delete dosen:", error);
+  }
+}
