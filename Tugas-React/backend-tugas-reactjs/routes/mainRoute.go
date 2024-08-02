@@ -102,5 +102,15 @@ func SetupRouter(db *gorm.DB, r *gin.Engine) {
 	r.PUT("/jadwal-kuliah/:id", controllers.UpdateJadwalKuliah)
 	r.DELETE("/jadwal-kuliah/:id", controllers.DeleteJadwalKuliah)
 
+	nilaiRoute := r.Group("/nilai")
+	nilaiRoute.Use(middlewares.JwtAuthMiddleware())
+	{
+		nilaiRoute.GET("", controllers.GetAllNilai)
+		nilaiRoute.POST("", controllers.CreateNilai)
+		nilaiRoute.GET("/:id", controllers.GetNilaiByID)
+		nilaiRoute.PUT("/:id", controllers.UpdateNilai)
+		nilaiRoute.DELETE("/:id", controllers.DeleteNilai)
+	}
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 }
