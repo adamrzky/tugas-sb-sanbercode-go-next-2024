@@ -1474,6 +1474,180 @@ const docTemplate = `{
                 }
             }
         },
+        "/nilai": {
+            "get": {
+                "description": "Get list of all Nilai with details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nilai"
+                ],
+                "summary": "Get all Nilai",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Nilai"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new Nilai\nCreate a new Nilai",
+                "consumes": [
+                    "application/json",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/json"
+                ],
+                "tags": [
+                    "Nilai",
+                    "Nilai"
+                ],
+                "summary": "Create new Nilai",
+                "parameters": [
+                    {
+                        "description": "Nilai",
+                        "name": "nilai",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    },
+                    {
+                        "description": "Nilai",
+                        "name": "nilai",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    }
+                }
+            }
+        },
+        "/nilai/{id}": {
+            "get": {
+                "description": "Get a Nilai by ID with details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nilai"
+                ],
+                "summary": "Get Nilai by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Nilai ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update an existing Nilai",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nilai"
+                ],
+                "summary": "Update a Nilai",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Nilai ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Nilai",
+                        "name": "nilai",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Nilai"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a Nilai by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Nilai"
+                ],
+                "summary": "Delete a Nilai",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Nilai ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "registering a user from public access.",
@@ -1688,7 +1862,10 @@ const docTemplate = `{
                     }
                 },
                 "mataKuliah": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.MataKuliah"
+                },
+                "mataKuliahID": {
+                    "type": "integer"
                 },
                 "nama": {
                     "type": "string"
@@ -1740,9 +1917,11 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "jamMulai": {
+                    "description": "Simpan sebagai 'HH:mm'",
                     "type": "string"
                 },
                 "jamSelesai": {
+                    "description": "Simpan sebagai 'HH:mm'",
                     "type": "string"
                 },
                 "mahasiswa": {
@@ -1760,9 +1939,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "createdAt": {
-                    "type": "string"
-                },
-                "email": {
+                    "description": "Email     string ` + "`" + `gorm:\"uniqueIndex\"` + "`" + `",
                     "type": "string"
                 },
                 "id": {
@@ -1785,22 +1962,10 @@ const docTemplate = `{
         "models.MataKuliah": {
             "type": "object",
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "dosens": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Dosen"
-                    }
-                },
                 "id": {
                     "type": "integer"
                 },
                 "nama": {
-                    "type": "string"
-                },
-                "updatedAt": {
                     "type": "string"
                 }
             }
@@ -1825,6 +1990,67 @@ const docTemplate = `{
                 },
                 "year": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.Nilai": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "indeks": {
+                    "type": "string"
+                },
+                "mahasiswa": {
+                    "$ref": "#/definitions/models.Mahasiswa"
+                },
+                "mahasiswa_id": {
+                    "type": "integer"
+                },
+                "mata_kuliah": {
+                    "$ref": "#/definitions/models.MataKuliah"
+                },
+                "mata_kuliah_id": {
+                    "type": "integer"
+                },
+                "skor": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "users": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "users_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }

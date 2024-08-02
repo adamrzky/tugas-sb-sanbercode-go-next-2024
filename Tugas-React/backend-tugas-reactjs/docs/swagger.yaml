@@ -120,7 +120,9 @@ definitions:
           $ref: '#/definitions/models.JadwalKuliah'
         type: array
       mataKuliah:
-        type: string
+        $ref: '#/definitions/models.MataKuliah'
+      mataKuliahID:
+        type: integer
       nama:
         type: string
       updatedAt:
@@ -154,8 +156,10 @@ definitions:
       id:
         type: integer
       jamMulai:
+        description: Simpan sebagai 'HH:mm'
         type: string
       jamSelesai:
+        description: Simpan sebagai 'HH:mm'
         type: string
       mahasiswa:
         $ref: '#/definitions/models.Mahasiswa'
@@ -167,8 +171,7 @@ definitions:
   models.Mahasiswa:
     properties:
       createdAt:
-        type: string
-      email:
+        description: Email     string `gorm:"uniqueIndex"`
         type: string
       id:
         type: integer
@@ -183,17 +186,9 @@ definitions:
     type: object
   models.MataKuliah:
     properties:
-      createdAt:
-        type: string
-      dosens:
-        items:
-          $ref: '#/definitions/models.Dosen'
-        type: array
       id:
         type: integer
       nama:
-        type: string
-      updatedAt:
         type: string
     type: object
   models.Movie:
@@ -210,6 +205,46 @@ definitions:
         type: string
       year:
         type: integer
+    type: object
+  models.Nilai:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      indeks:
+        type: string
+      mahasiswa:
+        $ref: '#/definitions/models.Mahasiswa'
+      mahasiswa_id:
+        type: integer
+      mata_kuliah:
+        $ref: '#/definitions/models.MataKuliah'
+      mata_kuliah_id:
+        type: integer
+      skor:
+        type: integer
+      updated_at:
+        type: string
+      users:
+        $ref: '#/definitions/models.User'
+      users_id:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
     type: object
 info:
   contact: {}
@@ -1165,6 +1200,124 @@ paths:
       summary: Update Movie.
       tags:
       - Movie
+  /nilai:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all Nilai with details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Nilai'
+            type: array
+      summary: Get all Nilai
+      tags:
+      - Nilai
+    post:
+      consumes:
+      - application/json
+      - application/json
+      description: |-
+        Create a new Nilai
+        Create a new Nilai
+      parameters:
+      - description: Nilai
+        in: body
+        name: nilai
+        required: true
+        schema:
+          $ref: '#/definitions/models.Nilai'
+      - description: Nilai
+        in: body
+        name: nilai
+        required: true
+        schema:
+          $ref: '#/definitions/models.Nilai'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      summary: Create new Nilai
+      tags:
+      - Nilai
+      - Nilai
+  /nilai/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Nilai by ID
+      parameters:
+      - description: Nilai ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: Delete a Nilai
+      tags:
+      - Nilai
+    get:
+      consumes:
+      - application/json
+      description: Get a Nilai by ID with details
+      parameters:
+      - description: Nilai ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      summary: Get Nilai by ID
+      tags:
+      - Nilai
+    put:
+      consumes:
+      - application/json
+      description: Update an existing Nilai
+      parameters:
+      - description: Nilai ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Nilai
+        in: body
+        name: nilai
+        required: true
+        schema:
+          $ref: '#/definitions/models.Nilai'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      summary: Update a Nilai
+      tags:
+      - Nilai
   /register:
     post:
       description: registering a user from public access.
