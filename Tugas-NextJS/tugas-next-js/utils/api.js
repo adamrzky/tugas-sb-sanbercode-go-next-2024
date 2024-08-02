@@ -67,26 +67,23 @@ export const deleteMahasiswa = async (id) => {
   return response.data;
 };
 
-
 export const getMataKuliah = async () => {
   const response = await api.get("/mata-kuliah");
   return response.data;
 };
 
-
-
 // Fungsi untuk menambahkan Mata Kuliah baru
 export async function createMataKuliah(data) {
-  console.log(data)
+  console.log(data);
   try {
     const response = await fetch(`${API_URL}/mata-kuliah`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
-    console.log(response)
+    console.log(response);
     return await response.json();
   } catch (error) {
     console.error("Failed to create mata kuliah:", error);
@@ -97,11 +94,11 @@ export async function createMataKuliah(data) {
 export async function updateMataKuliah(id, data) {
   try {
     const response = await fetch(`${API_URL}/mata-kuliah/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     return await response.json();
   } catch (error) {
@@ -113,7 +110,7 @@ export async function updateMataKuliah(id, data) {
 export async function deleteMataKuliah(id) {
   try {
     const response = await fetch(`${API_URL}/mata-kuliah/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
     return await response.json();
   } catch (error) {
@@ -121,16 +118,15 @@ export async function deleteMataKuliah(id) {
   }
 }
 
-
 // Fungsi untuk menambahkan Dosen baru
 export async function createDosen(data) {
   try {
     const response = await fetch(`${API_URL}/dosen`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     return await response.json();
   } catch (error) {
@@ -142,11 +138,11 @@ export async function createDosen(data) {
 export async function updateDosen(id, data) {
   try {
     const response = await fetch(`${API_URL}/dosen/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
     return await response.json();
   } catch (error) {
@@ -158,10 +154,66 @@ export async function updateDosen(id, data) {
 export async function deleteDosen(id) {
   try {
     const response = await fetch(`${API_URL}/dosen/${id}`, {
-      method: 'DELETE'
+      method: "DELETE",
     });
     return await response.json();
   } catch (error) {
     console.error("Failed to delete dosen:", error);
   }
 }
+
+export const getNilai = async (token) => {
+  try {
+    const response = await api.get("/nilai", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching nilai:", error);
+    throw new Error("Gagal mengambil data nilai.");
+  }
+};
+
+export const createNilai = async (data, token) => {
+  try {
+    const response = await api.post("/nilai", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating nilai:", error);
+    throw new Error("Gagal membuat data nilai.");
+  }
+};
+
+export const updateNilai = async (id, data, token) => {
+  try {
+    const response = await api.put(`/nilai/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating nilai:", error);
+    throw new Error("Gagal memperbarui data nilai.");
+  }
+};
+
+export const deleteNilai = async (id, token) => {
+  try {
+    const response = await api.delete(`/nilai/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting nilai:", error);
+    throw new Error("Gagal menghapus data nilai.");
+  }
+};
